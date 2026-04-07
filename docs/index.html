@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keynote Suite — Bi-Directional Dynamo Automation for Civil 3D</title>
+<style>
+:root{--blue:#0056b3;--blue-dark:#002b5c;--blue-light:#e8f0fe;--green:#198754;--green-light:#e8f5e9;--red:#c0392b;--red-light:#fdecea;--teal:#0d9488;--teal-light:#e0f7f5;--orange:#e67e22;--orange-light:#fff3e0;--gray:#f5f7f9;--border:#dde1e6;--text:#1a1a2e;--muted:#555;--radius:10px;--shadow:0 2px 10px rgba(0,0,0,0.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;color:var(--text);background:var(--gray)}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 55%,var(--teal) 100%);color:#fff;padding:60px 24px 48px;text-align:center}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:.78rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:18px}
+.hero h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;line-height:1.2;margin-bottom:14px;max-width:780px;margin-left:auto;margin-right:auto}
+.hero h1 span{color:#7dd3fc}
+.hero-abstract{font-size:1rem;opacity:.92;max-width:680px;margin:0 auto 24px;line-height:1.75}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:.8rem;opacity:.7}
+.hero-meta span{background:rgba(255,255,255,0.12);padding:3px 12px;border-radius:12px}
+.au-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:8px;padding:8px 20px;margin-top:24px;font-weight:700;font-size:.9rem}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1060px;margin:0 auto;padding:40px 20px 80px}
+.section{background:#fff;border-radius:var(--radius);padding:32px 36px;margin-bottom:28px;box-shadow:var(--shadow)}
+.section h2{font-size:1.35rem;color:var(--blue);border-bottom:2px solid var(--blue-light);padding-bottom:10px;margin-bottom:20px}
+.section h3{font-size:1.05rem;color:var(--blue-dark);margin:22px 0 10px;font-weight:700}
+.lede{font-size:1.05rem;color:var(--muted);margin-bottom:20px;line-height:1.75}
+
+/* ── PHASE LABEL ── */
+.pill{display:inline-block;padding:3px 14px;border-radius:20px;font-size:.75rem;font-weight:700;color:#fff;margin-bottom:12px}
+.pill-blue{background:var(--blue)}.pill-green{background:var(--green)}.pill-teal{background:var(--teal)}.pill-orange{background:var(--orange)}.pill-red{background:var(--red)}
+
+/* ── PROBLEM FLOW ── */
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:22px 0}
+.flow-step{background:#fff;border:2px solid var(--blue);border-radius:8px;padding:10px 16px;font-size:.82rem;font-weight:600;text-align:center;min-width:120px}
+.flow-step.pain{border-color:var(--red);border-width:3px}
+.flow-step small{display:block;color:var(--red);font-weight:400;margin-top:2px}
+.flow-arrow{font-size:1.3rem;color:var(--blue);font-weight:700}
+
+/* ── STAT STRIP ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin:20px 0}
+.stat{background:var(--blue-light);border-radius:8px;padding:18px;text-align:center}
+.stat-num{font-size:2rem;font-weight:800;color:var(--blue);line-height:1}
+.stat-label{font-size:.8rem;color:var(--muted);margin-top:4px}
+
+/* ── MODE GRID ── */
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
+.mode-card{border-radius:8px;padding:18px;border:1px solid var(--border)}
+.mode-card.export{border-left:4px solid var(--teal)}
+.mode-card.import{border-left:4px solid var(--green)}
+.mode-card.gen{border-left:4px solid var(--blue)}
+.mode-card.extract{border-left:4px solid var(--orange)}
+.mode-num{font-size:.72rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.6;margin-bottom:4px}
+.mode-title{font-weight:700;font-size:.95rem;margin-bottom:4px}
+.mode-dir{font-size:.78rem;font-weight:600;margin-bottom:6px;opacity:.75}
+.mode-desc{font-size:.83rem;color:var(--muted);line-height:1.55}
+
+/* ── ROUTER FLOW ── */
+.router-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:20px 0}
+.r-step{background:var(--teal-light);border:2px solid var(--teal);border-radius:8px;padding:10px 14px;font-size:.8rem;font-weight:600;text-align:center;min-width:110px}
+.r-step.engine{background:var(--blue);color:#fff;border-color:var(--blue)}
+.r-arrow{font-size:1.2rem;color:var(--teal)}
+
+/* ── VS GRID ── */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:start;margin:18px 0}
+.vs-panel{border-radius:8px;padding:20px;border:1px solid var(--border)}
+.vs-panel.old{border-top:4px solid var(--red)}.vs-panel.new{border-top:4px solid var(--green)}
+.vs-panel h4{text-align:center;margin-bottom:12px;font-size:.95rem}
+.vs-panel ul{padding-left:18px;font-size:.85rem;color:var(--muted);line-height:1.8}
+.vs-div{display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;color:var(--blue)}
+@media(max-width:640px){.vs{grid-template-columns:1fr}.vs-div{transform:rotate(90deg)}}
+
+/* ── CALLOUT ── */
+.callout{border-radius:8px;padding:14px 18px;margin:16px 0;font-size:.9rem;border-left:4px solid;line-height:1.7}
+.c-blue{background:var(--blue-light);border-color:var(--blue)}
+.c-green{background:var(--green-light);border-color:var(--green)}
+.c-teal{background:var(--teal-light);border-color:var(--teal)}
+.c-red{background:var(--red-light);border-color:var(--red)}
+
+/* ── LEARNING OBJ ── */
+.lo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
+.lo-card{border-radius:8px;padding:18px;background:var(--blue-light);border-left:4px solid var(--blue)}
+.lo-num{font-size:.72rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.lo-text{font-size:.88rem;color:var(--text);line-height:1.55}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:var(--blue);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
+td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--blue-light)}
+
+/* ── ENTITY TYPES ── */
+.entity-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:16px 0}
+.entity-card{border-radius:8px;padding:16px;border:1px solid var(--border);text-align:center}
+.entity-icon{font-size:2rem;margin-bottom:8px}
+.entity-name{font-weight:700;font-size:.9rem;margin-bottom:4px}
+.entity-desc{font-size:.8rem;color:var(--muted)}
+
+/* ── SESSION BOX ── */
+.session-box{background:var(--blue-dark);color:#fff;border-radius:var(--radius);padding:32px 36px;margin-bottom:28px;text-align:center}
+.session-box h2{font-size:1.5rem;margin-bottom:8px;color:#7dd3fc}
+.session-box p{opacity:.85;font-size:.92rem;max-width:600px;margin:0 auto 20px}
+.session-meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:.82rem}
+.session-meta span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);padding:4px 14px;border-radius:12px}
+
+/* ── FOOTER ── */
+footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px;padding-bottom:20px}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">AU 2026 &bull; Technical Deep Dive &bull; Civil Infrastructure</div>
+  <h1>From <span>60 Hours</span> to 60 Minutes:<br>Bi-Directional Keynote Automation<br>with Dynamo for Civil 3D</h1>
+  <p class="hero-abstract">Every plan set has keynote callouts, notes, and tables. Every revision means hours of manual editing — renumbering tags, reformatting MText, updating attributes, sheet by sheet, discipline by discipline. What if ONE Dynamo run could replace all of that at the click of a button?</p>
+  <div class="hero-meta">
+    <span>Sep 15–17, 2026 &bull; Las Vegas</span>
+    <span>60 min &bull; In-Person</span>
+    <span>Civil Engineering Track</span>
+    <span>Dynamo + Civil 3D + AutoCAD API</span>
+  </div>
+  <div class="au-badge">&#x1f3db;&#xfe0f; Autodesk University 2026</div>
+</div>
+
+<div class="wrap">
+
+<!-- ABSTRACT -->
+<div class="section">
+  <h2>Session Abstract</h2>
+  <p class="lede">Every plan set has keynote callouts, notes, and tables. Every revision means hours of manual editing — renumbering tags, reformatting MText, updating attributes, sheet by sheet, discipline by discipline. What if ONE Dynamo run could replace all of that at the click of a button?</p>
+  <div class="callout c-blue">
+    This session demos a bi-directional engine that connects a single Excel workbook to every callout tag and table across every layout. Auto-filtered per sheet. Built-in orphan detection. No Data Links. No per-sheet tabs. From Standard Library to Civil 3D automation — an engine that works with <strong>ANY standard, ANY discipline, ANY scale</strong>. See it live. Configure it for your standards. Deploy it tomorrow.
+  </div>
+</div>
+
+<!-- THE PROBLEM -->
+<div class="section">
+  <h2>Part 1 — The Problem</h2>
+  <span class="pill pill-red">What the industry does today</span>
+  <p>Keynote management is a universal deliverable across every civil discipline — Water, Paving, Grading, Erosion Control, Storm, Signing &amp; Striping. Every revision cycle touches the same five phases:</p>
+
+  <div class="flow">
+    <div class="flow-step">1. Receive<br>&amp; Inventory</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">2. Keynote<br>Content Update</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step pain">3. CAD Table<br>Updates<small>60–80% of time</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">4. Callout Tag<br>Updates</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step">5. QC &amp;<br>Delivery</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">60+</div><div class="stat-label">Hours per revision cycle (novice)</div></div>
+    <div class="stat"><div class="stat-num">6×</div><div class="stat-label">Minimum discipline rounds</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Automated QC checks (eyeball only)</div></div>
+    <div class="stat"><div class="stat-num">O(n²)</div><div class="stat-label">Scaling — collapses on large sets</div></div>
+  </div>
+
+  <h3>The Industry Baseline: Data Links</h3>
+  <div class="callout c-red">
+    <strong>Data Links already connect Excel to tables — but only halfway.</strong> They update table content but don't touch callout tags. They require one Excel tab per table per sheet. They can't auto-filter per sheet. They provide no orphan detection or diagnostic logging.
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>Capability</th><th>Data Links (Native)</th><th>Keynote Suite</th></tr>
+      <tr><td>Excel → Table content</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Excel → Callout tag attributes</td><td>✗</td><td>✓</td></tr>
+      <tr><td>Auto-filter per sheet</td><td>✗</td><td>✓</td></tr>
+      <tr><td>Single master workbook for all sheets</td><td>✗ (1 tab per table)</td><td>✓</td></tr>
+      <tr><td>Orphan / ghost detection</td><td>✗</td><td>✓</td></tr>
+      <tr><td>Batch all layouts in one run</td><td>✗</td><td>✓</td></tr>
+      <tr><td>Renumbering propagation</td><td>✗</td><td>✓</td></tr>
+      <tr><td>MText, Block, MLeader support</td><td>Table only</td><td>All three</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- THE SOLUTION -->
+<div class="section">
+  <h2>Part 2 — The Solution: Keynote Suite v7.0</h2>
+  <span class="pill pill-green">Production-deployed</span>
+
+  <div class="vs">
+    <div class="vs-panel old">
+      <h4 style="color:var(--red)">Manual + Data Links</h4>
+      <ul>
+        <li>One Excel tab per table per sheet</li>
+        <li>Tables only — callouts untouched</li>
+        <li>No per-sheet auto-filtering</li>
+        <li>Renumber = touch every callout manually</li>
+        <li>No orphan/ghost detection</li>
+        <li>Collapses at scale</li>
+      </ul>
+    </div>
+    <div class="vs-div">→</div>
+    <div class="vs-panel new">
+      <h4 style="color:var(--green)">Keynote Suite v7.0</h4>
+      <ul>
+        <li>One master workbook drives everything</li>
+        <li>Syncs callout tags AND tables in one run</li>
+        <li>Auto-filters notes per sheet automatically</li>
+        <li>Renumber in Excel — sync handles the rest</li>
+        <li>Built-in orphan detection + diagnostic log</li>
+        <li>Linear scaling — same tool for 10 or 200 sheets</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>4 Operating Modes</h3>
+  <div class="mode-grid">
+    <div class="mode-card export">
+      <div class="mode-num">Mode 1</div>
+      <div class="mode-title">Sync Export</div>
+      <div class="mode-dir" style="color:var(--teal)">CAD → Excel</div>
+      <div class="mode-desc">Reads all keynote entities from the drawing. Exports to Excel with one sheet per layout. Preserves existing workbook — onboarding ramp for existing drawings.</div>
+    </div>
+    <div class="mode-card import">
+      <div class="mode-num">Mode 2</div>
+      <div class="mode-title">Sync Import</div>
+      <div class="mode-dir" style="color:var(--green)">Excel → CAD</div>
+      <div class="mode-desc">Daily driver. Engineer updates Excel — run Sync Import — all callout descriptions update in-place by matching ID. Handles renumbering automatically.</div>
+    </div>
+    <div class="mode-card gen">
+      <div class="mode-num">Mode 3</div>
+      <div class="mode-title">Generate Table</div>
+      <div class="mode-dir" style="color:var(--blue)">Excel → CAD (new)</div>
+      <div class="mode-desc">Creates keynote tables from Excel data. Places tables at configured location with correct styles, column widths, and callout blocks.</div>
+    </div>
+    <div class="mode-card extract">
+      <div class="mode-num">Mode 4</div>
+      <div class="mode-title">Export Table</div>
+      <div class="mode-dir" style="color:var(--orange)">CAD Table → Excel</div>
+      <div class="mode-desc">Extracts existing table content to Excel for editing or review. QC receipt — confirm what is live in the drawing without modifying anything.</div>
+    </div>
+  </div>
+
+  <h3>Supported Entity Types</h3>
+  <div class="entity-grid">
+    <div class="entity-card">
+      <div class="entity-icon">🏷️</div>
+      <div class="entity-name">MLeader + Block</div>
+      <div class="entity-desc">Block content with ID and KEY-DESC attributes. Most common standard callout.</div>
+    </div>
+    <div class="entity-card">
+      <div class="entity-icon">📝</div>
+      <div class="entity-name">MLeader + MText</div>
+      <div class="entity-desc">Text-only leaders. Formatting codes stripped automatically. Export supported.</div>
+    </div>
+    <div class="entity-card">
+      <div class="entity-icon">📦</div>
+      <div class="entity-name">Block Attributes Only</div>
+      <div class="entity-desc">Standalone block references with ID + description attributes. No leader required.</div>
+    </div>
+  </div>
+
+  <div class="callout c-teal">
+    <strong>Standards-agnostic by design.</strong> Block names, table styles, layer names, column widths — all input-driven. Configure once in Dynamo Player, save inputs, reuse across every project. Works with ANY firm standard, ANY jurisdiction, ANY discipline — without touching a line of code.
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section">
+  <h2>Part 3 — Architecture: Router + Engine</h2>
+  <span class="pill pill-teal">How it works under the hood</span>
+  <p>The tool separates concerns through independent router nodes — each translates one dropdown setting into one engine input. No interlock, no cascading configuration complexity.</p>
+
+  <div class="router-flow">
+    <div class="r-step">Selection<br><small style="font-weight:400">Auto / Manual</small></div>
+    <span class="r-arrow">→</span>
+    <div class="r-step">Layout Scope<br><small style="font-weight:400">Active / All</small></div>
+    <span class="r-arrow">→</span>
+    <div class="r-step">Table Header<br><small style="font-weight:400">5 modes</small></div>
+    <span class="r-arrow">→</span>
+    <div class="r-step">Layer<br><small style="font-weight:400">Current / DEFPOINTS</small></div>
+    <span class="r-arrow">→</span>
+    <div class="r-step engine">Keynote Engine v7.0<br><small style="font-weight:400;opacity:.8">1,553 lines</small></div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>Router</th><th>Input</th><th>What it controls</th></tr>
+      <tr><td>Selection Router</td><td>AutoScan or Manual</td><td>Whether engine scans all objects or uses your selection set</td></tr>
+      <tr><td>Layout Scope Router</td><td>Active or All Layouts</td><td>Which layout tabs are processed in one run</td></tr>
+      <tr><td>Table Header Setting</td><td>5-mode dropdown</td><td>Title block presence, column header row, block on header row</td></tr>
+      <tr><td>Layer Setting</td><td>Current Layer or DEFPOINTS</td><td>Which layer new objects are placed on</td></tr>
+    </table>
+  </div>
+
+  <div class="callout c-blue">
+    <strong>5-Minute Setup.</strong> Open Dynamo Player. Fill 4 fields: mode, Excel path, title text, block name. Everything else has production-safe defaults. No scripting. No Python knowledge required. Any CAD user can deploy it on their first run.
+  </div>
+</div>
+
+<!-- LEARNING OBJECTIVES -->
+<div class="section">
+  <h2>Part 4 — What You'll Leave With</h2>
+  <span class="pill pill-blue">4 Learning Objectives</span>
+  <div class="lo-grid">
+    <div class="lo-card">
+      <div class="lo-num">LO 1 — Identify</div>
+      <div class="lo-text">Identify where manual keynote management compounds across disciplines and revisions — and what it costs in production hours.</div>
+    </div>
+    <div class="lo-card">
+      <div class="lo-num">LO 2 — Define</div>
+      <div class="lo-text">Define how standard differences across jurisdictions, firms, and reviewers create errors and rework in keynote workflows.</div>
+    </div>
+    <div class="lo-card">
+      <div class="lo-num">LO 3 — Configure</div>
+      <div class="lo-text">Configure and save input settings to match any block names, table styles, and layer standards — reusable across projects.</div>
+    </div>
+    <div class="lo-card">
+      <div class="lo-num">LO 4 — Deploy</div>
+      <div class="lo-text">Deploy the engine on a live project and confirm every callout and table are synchronized across all layouts in one pass.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION BOX -->
+<div class="session-box">
+  <h2>AU 2026 &mdash; Technical Deep Dive</h2>
+  <p>From 60 Hours to 60 Minutes: Bi-Directional Keynote Automation with Dynamo for Civil 3D</p>
+  <div class="session-meta">
+    <span>September 15–17, 2026</span>
+    <span>The Venetian, Las Vegas</span>
+    <span>60 Minutes &bull; In-Person</span>
+    <span>Civil Engineering Track</span>
+    <span>Intermediate Level</span>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  Keynote Suite v7.0 &bull; Dynamo for Civil 3D &bull; AutoCAD API &bull; AU 2026 Proposal
+</footer>
+
+</body>
+</html>
