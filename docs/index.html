@@ -153,11 +153,47 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px;pad
     <div class="flow-step">5. QC &amp;<br>Delivery</div>
   </div>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-num">60+</div><div class="stat-label">Hours per revision cycle (novice)</div></div>
-    <div class="stat"><div class="stat-num">6×</div><div class="stat-label">Minimum discipline rounds</div></div>
-    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Automated QC checks (eyeball only)</div></div>
-    <div class="stat"><div class="stat-num">O(n²)</div><div class="stat-label">Scaling — collapses on large sets</div></div>
+  <!-- PAIN POINTS -->
+  <div class="pain-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:20px 0">
+    <div style="border-radius:8px;padding:20px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div style="font-weight:800;font-size:1.05rem;color:var(--red);margin-bottom:6px">Cell-by-Cell Editing</div>
+      <div style="font-size:.87rem;color:var(--muted)">Every table row touched by hand. Every sheet. Every discipline. No batch operation exists in native Civil 3D.</div>
+    </div>
+    <div style="border-radius:8px;padding:20px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div style="font-weight:800;font-size:1.05rem;color:var(--red);margin-bottom:6px">Callout Tags Disconnected</div>
+      <div style="font-size:.87rem;color:var(--muted)">MLeader attributes and table rows are independent text objects. Change one — the other doesn't know. Orphans and ghosts are the result.</div>
+    </div>
+    <div style="border-radius:8px;padding:20px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div style="font-weight:800;font-size:1.05rem;color:var(--red);margin-bottom:6px">Renumbering Cascades</div>
+      <div style="font-size:.87rem;color:var(--muted)">One note renumbered means touching every callout on every sheet that references it. Across six disciplines. Manually.</div>
+    </div>
+    <div style="border-radius:8px;padding:20px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div style="font-weight:800;font-size:1.05rem;color:var(--red);margin-bottom:6px">No Standard Master List</div>
+      <div style="font-size:.87rem;color:var(--muted)">Data Links require one Excel tab per table per sheet. A 50-sheet set means 50 separate links — each configured and maintained individually.</div>
+    </div>
+    <div style="border-radius:8px;padding:20px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div style="font-weight:800;font-size:1.05rem;color:var(--red);margin-bottom:6px">Standards Vary Everywhere</div>
+      <div style="font-size:.87rem;color:var(--muted)">Jurisdiction to jurisdiction. Firm to firm. Reviewer to reviewer. Block names, table styles, note wording — nothing is standard.</div>
+    </div>
+    <div style="border-radius:8px;padding:20px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div style="font-weight:800;font-size:1.05rem;color:var(--red);margin-bottom:6px">QC Is Eyeball-Only</div>
+      <div style="font-size:.87rem;color:var(--muted)">Print. Mark off. Hope you caught them all. No automated check exists to confirm every callout has a matching table entry.</div>
+    </div>
+  </div>
+
+  <!-- INDUSTRY NUMBERS -->
+  <h3>The Broader Industry Picture</h3>
+  <div class="callout c-red" style="margin-bottom:10px">
+    <strong>$177.5 billion</strong> in annual labor costs lost to non-productive work — fixing mistakes, searching for data, and resolving conflicts — across the U.S. construction industry alone.<br>
+    <span style="font-size:.78rem;opacity:.7">Source: PlanGrid &amp; FMI Corp survey, 2018 — published on Autodesk Construction Blog</span>
+  </div>
+  <div class="callout c-red" style="margin-bottom:10px">
+    <strong>14 hours per week</strong> — the average time a construction professional spends on non-productive tasks that take away from higher-priority work.<br>
+    <span style="font-size:.78rem;opacity:.7">Source: PlanGrid &amp; FMI Corp survey, 600 construction leaders, 2018</span>
+  </div>
+  <div class="callout c-red">
+    <strong>70% of rework</strong> in construction and engineering projects is design-induced — errors, omissions, and late changes in documentation and drawings.<br>
+    <span style="font-size:.78rem;opacity:.7">Source: Multiple studies via ResearchGate &amp; CMAA — consistent finding across industry research</span>
   </div>
 
   <h3>The Industry Baseline: Data Links</h3>
