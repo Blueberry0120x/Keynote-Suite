@@ -97,6 +97,11 @@ tr:nth-child(even) td{background:var(--blue-light)}
 .entity-name{font-weight:700;font-size:.9rem;margin-bottom:4px}
 .entity-desc{font-size:.8rem;color:var(--muted)}
 
+/* ── EDITABLE CARDS ── */
+.editable-card [contenteditable]:hover{background:rgba(0,0,0,0.03);border-radius:4px;cursor:text}
+.editable-card [contenteditable]:focus{background:rgba(255,248,220,0.6);border-radius:4px;box-shadow:0 0 0 2px #f59e0b}
+#copy-edits-btn{display:block;margin:0 0 16px auto;padding:6px 16px;background:var(--blue);color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;letter-spacing:.3px}
+#copy-edits-btn:hover{background:var(--blue-dark)}
 /* ── SESSION BOX ── */
 .session-box{background:var(--blue-dark);color:#fff;border-radius:var(--radius);padding:32px 36px;margin-bottom:28px;text-align:center}
 .session-box h2{font-size:1.5rem;margin-bottom:8px;color:#7dd3fc}
@@ -154,50 +159,57 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px;pad
   </div>
 
   <!-- PAIN POINTS -->
-  <div class="pain-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:20px 0">
-    <div style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px">Cell-by-Cell Editing</div>
-      <div style="font-size:.78rem;color:var(--muted);line-height:1.5">Every row, every sheet, every discipline - no batch operation in native Civil 3D.</div>
+  <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px;opacity:.7">&#9998; Click any card to edit</div>
+  <div class="pain-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:0 0 20px">
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">Cell-by-Cell Editing</div>
+      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Every row, every sheet, every discipline - no batch operation in native Civil 3D.</div>
     </div>
-    <div style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px">Callout Tags Disconnected</div>
-      <div style="font-size:.78rem;color:var(--muted);line-height:1.5">MLeader and table row are separate objects - change one, the other doesn't update.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">Callout Tags Disconnected</div>
+      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">MLeader and table row are separate objects - change one, the other doesn't update.</div>
     </div>
-    <div style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px">Renumbering Cascades</div>
-      <div style="font-size:.78rem;color:var(--muted);line-height:1.5">One note renumbered - every callout across every sheet updated manually.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">Renumbering Cascades</div>
+      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">One note renumbered - every callout across every sheet updated manually.</div>
     </div>
-    <div style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px">No Master List</div>
-      <div style="font-size:.78rem;color:var(--muted);line-height:1.5">Data Links: one Excel tab per table per sheet - 50 sheets means 50 separate links.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">No Master List</div>
+      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Data Links: one Excel tab per table per sheet - 50 sheets means 50 separate links.</div>
     </div>
-    <div style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px">No Fixed Standard</div>
-      <div style="font-size:.78rem;color:var(--muted);line-height:1.5">Block names, table styles, note wording - varies firm to firm, jurisdiction to jurisdiction.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">No Fixed Standard</div>
+      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Block names, table styles, note wording - varies firm to firm, jurisdiction to jurisdiction.</div>
     </div>
-    <div style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px">No Automated QC</div>
-      <div style="font-size:.78rem;color:var(--muted);line-height:1.5">Orphans, ghosts, stale numbers - only caught after plot review or field RFIs.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
+      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">No Automated QC</div>
+      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Orphans, ghosts, stale numbers - only caught after plot review or field RFIs.</div>
     </div>
   </div>
 
   <!-- INDUSTRY NUMBERS -->
   <h3>The Broader Industry Picture</h3>
-  <div class="callout c-red" style="margin-bottom:10px">
-    <strong>$177.5 billion</strong> in annual labor costs lost to non-productive work — fixing mistakes, searching for data, and resolving conflicts — across the U.S. construction industry alone.<br>
-    <span style="font-size:.78rem;opacity:.7">Source: PlanGrid &amp; FMI Corp survey, 2018 — published on Autodesk Construction Blog</span>
-  </div>
-  <div class="callout c-red" style="margin-bottom:10px">
-    <strong>14 hours per week</strong> — the average time a construction professional spends on non-productive tasks that take away from higher-priority work.<br>
-    <span style="font-size:.78rem;opacity:.7">Source: PlanGrid &amp; FMI Corp survey, 600 construction leaders, 2018</span>
-  </div>
-  <div class="callout c-red" style="margin-bottom:10px">
-    <strong>70% of rework</strong> in construction and engineering projects is design-induced — errors, omissions, and late changes in documentation and drawings.<br>
-    <span style="font-size:.78rem;opacity:.7">Source: Multiple studies via ResearchGate &amp; CMAA — consistent finding across industry research</span>
-  </div>
-  <div class="callout c-red">
-    <strong>$1.85 trillion</strong> in global construction value is put at risk annually by bad project data — including inaccurate documents, missing information, and broken data handoffs.<br>
-    <span style="font-size:.78rem;opacity:.7">Source: Autodesk &amp; FMI, "Harnessing the Data Advantage in Construction," 2021</span>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:14px 0">
+    <div style="background:var(--red-light);border:1px solid #f5c6c2;border-radius:8px;padding:14px;text-align:center">
+      <div style="font-size:1.6rem;font-weight:900;color:var(--red);line-height:1">$177.5B</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">lost to non-productive work annually</div>
+      <div style="font-size:.65rem;opacity:.55;margin-top:4px">PlanGrid/FMI, 2018</div>
+    </div>
+    <div style="background:var(--red-light);border:1px solid #f5c6c2;border-radius:8px;padding:14px;text-align:center">
+      <div style="font-size:1.6rem;font-weight:900;color:var(--red);line-height:1">14 hrs</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">per week on non-productive tasks</div>
+      <div style="font-size:.65rem;opacity:.55;margin-top:4px">PlanGrid/FMI, 600 leaders, 2018</div>
+    </div>
+    <div style="background:var(--red-light);border:1px solid #f5c6c2;border-radius:8px;padding:14px;text-align:center">
+      <div style="font-size:1.6rem;font-weight:900;color:var(--red);line-height:1">70%</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">of rework is design-induced</div>
+      <div style="font-size:.65rem;opacity:.55;margin-top:4px">ResearchGate / CMAA</div>
+    </div>
+    <div style="background:var(--red-light);border:1px solid #f5c6c2;border-radius:8px;padding:14px;text-align:center">
+      <div style="font-size:1.6rem;font-weight:900;color:var(--red);line-height:1">$1.85T</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">at risk from bad project data globally</div>
+      <div style="font-size:.65rem;opacity:.55;margin-top:4px">Autodesk/FMI, 2021</div>
+    </div>
   </div>
 
   <h3>The Industry Baseline: Data Links</h3>
@@ -379,5 +391,28 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px;pad
   Keynote Suite v7.0 &bull; Dynamo for Civil 3D &bull; AutoCAD API &bull; AU 2026 Proposal
 </footer>
 
+<script>
+// Inject "Copy edits" button above pain grid
+document.addEventListener('DOMContentLoaded', function() {
+  var grid = document.querySelector('.pain-grid');
+  var btn = document.createElement('button');
+  btn.id = 'copy-edits-btn';
+  btn.textContent = 'Copy edits as text';
+  grid.parentNode.insertBefore(btn, grid);
+
+  btn.addEventListener('click', function() {
+    var out = [];
+    document.querySelectorAll('.editable-card').forEach(function(card) {
+      var title = card.querySelector('[data-card="title"]').innerText.trim();
+      var body  = card.querySelector('[data-card="body"]').innerText.trim();
+      out.push(title + '\n' + body);
+    });
+    navigator.clipboard.writeText(out.join('\n\n')).then(function() {
+      btn.textContent = 'Copied!';
+      setTimeout(function() { btn.textContent = 'Copy edits as text'; }, 1800);
+    });
+  });
+});
+</script>
 </body>
 </html>
