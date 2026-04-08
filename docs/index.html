@@ -1,435 +1,889 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Keynote Suite — Bi-Directional Dynamo Automation for Civil 3D</title>
-<style>
-:root{--blue:#0056b3;--blue-dark:#002b5c;--blue-light:#e8f0fe;--green:#198754;--green-light:#e8f5e9;--red:#c0392b;--red-light:#fdecea;--teal:#0d9488;--teal-light:#e0f7f5;--orange:#e67e22;--orange-light:#fff3e0;--gray:#f5f7f9;--border:#dde1e6;--text:#1a1a2e;--muted:#555;--radius:10px;--shadow:0 2px 10px rgba(0,0,0,0.08)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;color:var(--text);background:var(--gray)}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keynote Suite — Bi-Directional Dynamo Automation for Civil 3D</title>
+  <style>
 
-/* ── HERO ── */
-.hero{background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 55%,var(--teal) 100%);color:#fff;padding:60px 24px 48px;text-align:center}
-.hero-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 16px;font-size:.78rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:18px}
-.hero h1{font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:900;line-height:1.15;margin-bottom:16px;max-width:820px;margin-left:auto;margin-right:auto;letter-spacing:-.5px;text-shadow:0 2px 12px rgba(0,0,0,0.4)}
-.hero h1 span{color:#7dd3fc;text-shadow:0 0 30px rgba(125,211,252,0.5)}
-.hero-abstract{font-size:1.1rem;opacity:1;max-width:860px;margin:0 auto 24px;line-height:2;text-shadow:0 1px 4px rgba(0,0,0,0.35);font-weight:400;text-wrap:balance}
-/* EDIT HERO TEXT → search for "hero-abstract" in the HTML body (line ~123) */
-/* EDIT FONT SIZE → font-size above | EDIT LINE HEIGHT → line-height above */
-.hero-meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:.82rem}
-.hero-meta span{background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.55);padding:5px 16px;border-radius:14px;font-weight:600;color:#fff;letter-spacing:.3px;text-shadow:none;backdrop-filter:blur(4px)}
-.au-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:8px;padding:8px 20px;margin-top:24px;font-weight:700;font-size:.9rem}
+    /* ── VARIABLES ── */
+    :root {
+      --blue:         #0056b3;
+      --blue-dark:    #002b5c;
+      --blue-light:   #e8f0fe;
+      --green:        #198754;
+      --green-light:  #e8f5e9;
+      --red:          #c0392b;
+      --red-light:    #fdecea;
+      --teal:         #0d9488;
+      --teal-light:   #e0f7f5;
+      --orange:       #e67e22;
+      --orange-light: #fff3e0;
+      --gray:         #f5f7f9;
+      --border:       #dde1e6;
+      --text:         #1a1a2e;
+      --muted:        #555;
+      --radius:       10px;
+      --shadow:       0 2px 10px rgba(0,0,0,0.08);
+    }
 
-/* ── LAYOUT ── */
-.wrap{max-width:1060px;margin:0 auto;padding:40px 20px 80px}
-.section{background:#fff;border-radius:var(--radius);padding:32px 36px;margin-bottom:28px;box-shadow:var(--shadow)}
-.section h2{font-size:1.35rem;color:var(--blue);border-bottom:2px solid var(--blue-light);padding-bottom:10px;margin-bottom:20px}
-.section h3{font-size:1.05rem;color:var(--blue-dark);margin:22px 0 10px;font-weight:700}
-.lede{font-size:1.05rem;color:var(--muted);margin-bottom:20px;line-height:1.75}
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--gray);
+    }
 
-/* ── PHASE LABEL ── */
-.pill{display:inline-block;padding:3px 14px;border-radius:20px;font-size:.75rem;font-weight:700;color:#fff;margin-bottom:12px}
-.pill-blue{background:var(--blue)}.pill-green{background:var(--green)}.pill-teal{background:var(--teal)}.pill-orange{background:var(--orange)}.pill-red{background:var(--red)}
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 55%, var(--teal) 100%);
+      color: #fff;
+      padding: 60px 24px 48px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+      letter-spacing: -.5px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+    .hero h1 .accent {
+      color: #7dd3fc;
+      text-shadow: 0 0 30px rgba(125,211,252,0.5);
+    }
+    .hero-abstract {
+      font-size: 1.1rem;
+      max-width: 860px;
+      margin: 0 auto 24px;
+      line-height: 2;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.35);
+      font-weight: 400;
+      text-wrap: balance;
+    }
+    .hero-abstract-line2 {
+      font-size: 1rem;
+      opacity: .82;
+    }
+    .hero-abstract-whatif {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: .5px;
+      color: #7dd3fc;
+      text-shadow: 0 0 24px rgba(125,211,252,0.6);
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      font-size: .82rem;
+    }
+    .hero-meta span {
+      background: rgba(255,255,255,0.22);
+      border: 1px solid rgba(255,255,255,0.55);
+      padding: 5px 16px;
+      border-radius: 14px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: .3px;
+      backdrop-filter: blur(4px);
+    }
+    .au-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 8px;
+      padding: 8px 20px;
+      margin-top: 24px;
+      font-weight: 700;
+      font-size: .9rem;
+    }
 
-/* ── PROBLEM FLOW ── */
-.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:22px 0}
-.flow-step{background:#fff;border:2px solid var(--blue);border-radius:8px;padding:10px 16px;font-size:.82rem;font-weight:600;text-align:center;min-width:120px}
-.flow-step.pain{border-color:var(--red);border-width:3px}
-.flow-step small{display:block;color:var(--red);font-weight:400;margin-top:2px}
-.flow-arrow{font-size:1.3rem;color:var(--blue);font-weight:700}
+    /* ── LAYOUT ── */
+    .wrap { max-width: 1060px; margin: 0 auto; padding: 40px 20px 80px; }
+    .section {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+    }
+    .section h2 {
+      font-size: 1.35rem;
+      color: var(--blue);
+      border-bottom: 2px solid var(--blue-light);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .section h3 {
+      font-size: 1.05rem;
+      color: var(--blue-dark);
+      margin: 22px 0 10px;
+      font-weight: 700;
+    }
+    .lede {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+      line-height: 1.75;
+    }
 
-/* ── STAT STRIP ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin:20px 0}
-.stat{background:var(--blue-light);border-radius:8px;padding:18px;text-align:center}
-.stat-num{font-size:2rem;font-weight:800;color:var(--blue);line-height:1}
-.stat-label{font-size:.8rem;color:var(--muted);margin-top:4px}
+    /* ── PILL ── */
+    .pill {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .pill-blue   { background: var(--blue); }
+    .pill-green  { background: var(--green); }
+    .pill-teal   { background: var(--teal); }
+    .pill-orange { background: var(--orange); }
+    .pill-red    { background: var(--red); }
 
-/* ── MODE GRID ── */
-.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
-.mode-card{border-radius:8px;padding:18px;border:1px solid var(--border)}
-.mode-card.export{border-left:4px solid var(--teal)}
-.mode-card.import{border-left:4px solid var(--green)}
-.mode-card.gen{border-left:4px solid var(--blue)}
-.mode-card.extract{border-left:4px solid var(--orange)}
-.mode-num{font-size:.72rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.6;margin-bottom:4px}
-.mode-title{font-weight:700;font-size:.95rem;margin-bottom:4px}
-.mode-dir{font-size:.78rem;font-weight:600;margin-bottom:6px;opacity:.75}
-.mode-desc{font-size:.83rem;color:var(--muted);line-height:1.55}
+    /* ── FLOW ── */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin: 22px 0;
+    }
+    .flow-step {
+      background: #fff;
+      border: 2px solid var(--blue);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: .82rem;
+      font-weight: 600;
+      text-align: center;
+      min-width: 120px;
+    }
+    .flow-step.pain { border-color: var(--red); border-width: 3px; }
+    .flow-step small { display: block; color: var(--red); font-weight: 400; margin-top: 2px; }
+    .flow-arrow { font-size: 1.3rem; color: var(--blue); font-weight: 700; }
 
-/* ── ROUTER FLOW ── */
-.router-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:20px 0}
-.r-step{background:var(--teal-light);border:2px solid var(--teal);border-radius:8px;padding:10px 14px;font-size:.8rem;font-weight:600;text-align:center;min-width:110px}
-.r-step.engine{background:var(--blue);color:#fff;border-color:var(--blue)}
-.r-arrow{font-size:1.2rem;color:var(--teal)}
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .stat-card {
+      background: var(--red-light);
+      border: 1px solid #f5c6c2;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-num   { font-size: 1.6rem; font-weight: 900; color: var(--red); line-height: 1; }
+    .stat-label { font-size: .72rem; color: var(--muted); margin-top: 4px; }
+    .stat-src   { font-size: .65rem; opacity: .55; margin-top: 4px; }
 
-/* ── VS GRID ── */
-.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:start;margin:18px 0}
-.vs-panel{border-radius:8px;padding:20px;border:1px solid var(--border)}
-.vs-panel.old{border-top:4px solid var(--red)}.vs-panel.new{border-top:4px solid var(--green)}
-.vs-panel h4{text-align:center;margin-bottom:12px;font-size:.95rem}
-.vs-panel ul{padding-left:18px;font-size:.85rem;color:var(--muted);line-height:1.8}
-.vs-div{display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;color:var(--blue)}
-@media(max-width:640px){.vs{grid-template-columns:1fr}.vs-div{transform:rotate(90deg)}}
+    /* ── CALLOUT ── */
+    .callout {
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: .9rem;
+      border-left: 4px solid;
+      line-height: 1.7;
+    }
+    .c-blue   { background: var(--blue-light);  border-color: var(--blue); }
+    .c-green  { background: var(--green-light); border-color: var(--green); }
+    .c-teal   { background: var(--teal-light);  border-color: var(--teal); }
+    .c-red    { background: var(--red-light);   border-color: var(--red); }
 
-/* ── CALLOUT ── */
-.callout{border-radius:8px;padding:14px 18px;margin:16px 0;font-size:.9rem;border-left:4px solid;line-height:1.7}
-.c-blue{background:var(--blue-light);border-color:var(--blue)}
-.c-green{background:var(--green-light);border-color:var(--green)}
-.c-teal{background:var(--teal-light);border-color:var(--teal)}
-.c-red{background:var(--red-light);border-color:var(--red)}
+    /* ── PAIN CARDS ── */
+    .edit-hint {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      opacity: .7;
+    }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 0 0 20px;
+    }
+    .pain-card {
+      border-radius: 8px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--red);
+      text-align: center;
+    }
+    .pain-card-title {
+      font-weight: 800;
+      font-size: .88rem;
+      color: var(--red);
+      margin-bottom: 6px;
+      outline: none;
+    }
+    .pain-card-body {
+      font-size: .76rem;
+      color: var(--muted);
+      line-height: 1.5;
+      outline: none;
+    }
+    .editable-card [contenteditable]:hover { background: rgba(0,0,0,0.03); border-radius: 4px; cursor: text; }
+    .editable-card [contenteditable]:focus  { background: rgba(255,248,220,0.6); border-radius: 4px; box-shadow: 0 0 0 2px #f59e0b; }
+    #copy-edits-btn {
+      display: block;
+      margin: 0 0 16px auto;
+      padding: 6px 16px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .3px;
+    }
+    #copy-edits-btn:hover { background: var(--blue-dark); }
 
-/* ── LEARNING OBJ ── */
-.lo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
-.lo-card{border-radius:8px;padding:18px;background:var(--blue-light);border-left:4px solid var(--blue)}
-.lo-num{font-size:.72rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
-.lo-text{font-size:.88rem;color:var(--text);line-height:1.55}
+    /* ── VS GRID ── */
+    .vs {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 14px;
+      align-items: start;
+      margin: 18px 0;
+    }
+    .vs-panel {
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+    .vs-panel.old { border-top: 4px solid var(--red); }
+    .vs-panel.new { border-top: 4px solid var(--green); }
+    .vs-panel h4 { text-align: center; margin-bottom: 12px; font-size: .95rem; }
+    .vs-panel.old h4 { color: var(--red); }
+    .vs-panel.new h4 { color: var(--green); }
+    .vs-panel ul { padding-left: 18px; font-size: .85rem; color: var(--muted); line-height: 1.8; }
+    .vs-div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--blue);
+    }
+    @media (max-width: 640px) {
+      .vs { grid-template-columns: 1fr; }
+      .vs-div { transform: rotate(90deg); }
+      .pain-grid { grid-template-columns: 1fr 1fr; }
+    }
 
-/* ── TABLE ── */
-.tbl-wrap{overflow-x:auto;margin:14px 0}
-table{width:100%;border-collapse:collapse;font-size:.88rem}
-th{background:var(--blue);color:#fff;padding:10px 14px;text-align:left;font-weight:600}
-td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top}
-tr:nth-child(even) td{background:var(--blue-light)}
+    /* ── MODE GRID ── */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .mode-card {
+      border-radius: 8px;
+      padding: 18px;
+      border: 1px solid var(--border);
+    }
+    .mode-card.teal   { border-left: 4px solid var(--teal); }
+    .mode-card.green  { border-left: 4px solid var(--green); }
+    .mode-card.blue   { border-left: 4px solid var(--blue); }
+    .mode-card.orange { border-left: 4px solid var(--orange); }
+    .mode-num   { font-size: .72rem; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; opacity: .6; margin-bottom: 4px; }
+    .mode-title { font-weight: 700; font-size: .95rem; margin-bottom: 4px; }
+    .mode-dir   { font-size: .78rem; font-weight: 600; margin-bottom: 6px; opacity: .75; }
+    .mode-desc  { font-size: .83rem; color: var(--muted); line-height: 1.55; }
+    .mode-card.teal   .mode-dir { color: var(--teal); }
+    .mode-card.green  .mode-dir { color: var(--green); }
+    .mode-card.blue   .mode-dir { color: var(--blue); }
+    .mode-card.orange .mode-dir { color: var(--orange); }
 
-/* ── ENTITY TYPES ── */
-.entity-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:16px 0}
-.entity-card{border-radius:8px;padding:16px;border:1px solid var(--border);text-align:center}
-.entity-icon{font-size:2rem;margin-bottom:8px}
-.entity-name{font-weight:700;font-size:.9rem;margin-bottom:4px}
-.entity-desc{font-size:.8rem;color:var(--muted)}
+    /* ── ENTITY GRID ── */
+    .entity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .entity-card {
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .entity-icon { font-size: 2rem; margin-bottom: 8px; }
+    .entity-name { font-weight: 700; font-size: .9rem; margin-bottom: 4px; }
+    .entity-desc { font-size: .8rem; color: var(--muted); }
 
-/* ── EDITABLE CARDS ── */
-.editable-card [contenteditable]:hover{background:rgba(0,0,0,0.03);border-radius:4px;cursor:text}
-.editable-card [contenteditable]:focus{background:rgba(255,248,220,0.6);border-radius:4px;box-shadow:0 0 0 2px #f59e0b}
-#copy-edits-btn{display:block;margin:0 0 16px auto;padding:6px 16px;background:var(--blue);color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;letter-spacing:.3px}
-#copy-edits-btn:hover{background:var(--blue-dark)}
-/* ── SESSION BOX ── */
-.session-box{background:var(--blue-dark);color:#fff;border-radius:var(--radius);padding:32px 36px;margin-bottom:28px;text-align:center}
-.session-box h2{font-size:1.5rem;margin-bottom:8px;color:#7dd3fc}
-.session-box p{opacity:.85;font-size:.92rem;max-width:600px;margin:0 auto 20px}
-.session-meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:.82rem}
-.session-meta span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);padding:4px 14px;border-radius:12px}
+    /* ── ROUTER FLOW ── */
+    .router-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .r-step {
+      background: var(--teal-light);
+      border: 2px solid var(--teal);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: .8rem;
+      font-weight: 600;
+      text-align: center;
+      min-width: 110px;
+    }
+    .r-step.engine { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .r-step small  { display: block; font-weight: 400; }
+    .r-step.engine small { opacity: .8; }
+    .r-arrow { font-size: 1.2rem; color: var(--teal); }
 
-/* ── FOOTER ── */
-footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px;padding-bottom:20px}
-</style>
+    /* ── LEARNING OBJECTIVES ── */
+    .lo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .lo-card {
+      border-radius: 8px;
+      padding: 18px;
+      background: var(--blue-light);
+      border-left: 4px solid var(--blue);
+    }
+    .lo-num  { font-size: .72rem; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+    .lo-text { font-size: .88rem; color: var(--text); line-height: 1.55; }
+
+    /* ── TABLE ── */
+    .tbl-wrap { overflow-x: auto; margin: 14px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th { background: var(--blue); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:nth-child(even) td { background: var(--blue-light); }
+
+    /* ── SESSION BOX ── */
+    .session-box {
+      background: var(--blue-dark);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .session-box h2 { font-size: 1.5rem; margin-bottom: 8px; color: #7dd3fc; }
+    .session-box p  { opacity: .85; font-size: .92rem; max-width: 600px; margin: 0 auto 20px; }
+    .session-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      font-size: .82rem;
+    }
+    .session-meta span {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 4px 14px;
+      border-radius: 12px;
+    }
+
+    /* ── FOOTER ── */
+    footer { text-align: center; color: var(--muted); font-size: .78rem; margin-top: 40px; padding-bottom: 20px; }
+
+  </style>
 </head>
 <body>
 
+<!-- ╔══════════════════════════════════════════════════╗
+     ║         EDIT ALL CONTENT HERE — DO NOT          ║
+     ║         TOUCH ANYTHING BELOW THIS BLOCK         ║
+     ╚══════════════════════════════════════════════════╝ -->
+<script id="content-config">
+const CONTENT = {
+
+  hero: {
+    badge: "AU 2026 \u2022 Technical Deep Dive \u2022 Civil Infrastructure",
+    titleHtml: `From <span class="accent">60 Hours</span> to 60 Minutes:<br>Bi-Directional Keynote Automation<br>with Dynamo for Civil 3D`,
+    // abstractLines[0] = line 1 (normal weight)
+    // abstractLines[1] = line 2 (slightly smaller/muted)
+    // abstractLines[2] = "What IF" accent — edit text only, cyan glow style stays
+    // abstractLines[3] = line 4 closing punch
+    abstractLines: [
+      "Every plan set has keynote callouts, notes, and tables. Every revision means hours of manual editing.",
+      "From Renumbering Tags, Formatting Content, Updating Attributes, or Updating Table Links. Sheet by Sheet, Discipline by Discipline.",
+      "What IF !?",
+      "ONE Dynamo run could replace all of that at the click of a button."
+    ],
+    meta: [
+      "Sep 15\u201317, 2026 \u2022 Las Vegas",
+      "60 min \u2022 In-Person",
+      "Civil Engineering Track",
+      "Dynamo + Civil 3D + AutoCAD API"
+    ],
+    footerBadge: "\uD83C\uDFDB\uFE0F Autodesk University 2026"
+  },
+
+  abstract: {
+    lede: "Every plan set has keynote callouts, notes, and tables. Every revision means hours of manual editing \u2014 renumbering tags, reformatting MText, updating attributes, sheet by sheet, discipline by discipline. What if ONE Dynamo run could replace all of that at the click of a button?",
+    callout: "This session demos a bi-directional engine that connects a single Excel workbook to every callout tag and table across every layout. Auto-filtered per sheet. Built-in orphan detection. No Data Links. No per-sheet tabs. From Standard Library to Civil 3D automation \u2014 an engine that works with <strong>ANY standard, ANY discipline, ANY scale</strong>. See it live. Configure it for your standards. Deploy it tomorrow."
+  },
+
+  painCards: [
+    { title: "Manual Content Editing",    body: "Every content - sheet - discipline required manual edit from redline to CAD." },
+    { title: "Callout Tags Disconnected", body: "MLeader and table row are separate objects - change one, the other doesn't update." },
+    { title: "Renumbering Cascades",      body: "One note renumbered - every callout across every sheet must be updated manually." },
+    { title: "No Master List",            body: "Data Links: one Excel tab per table per sheet - 50 sheets means 50 separate links." },
+    { title: "No Fixed Standard",         body: "Block Names, Table Styles, Note Wording varies firm to firm, jurisdiction to jurisdiction." }
+  ],
+
+  stats: [
+    { num: "$177.5B", label: "lost to non-productive work annually",  source: "PlanGrid/FMI, 2018" },
+    { num: "14 hrs",  label: "per week on non-productive tasks",      source: "PlanGrid/FMI, 600 leaders, 2018" },
+    { num: "70%",     label: "of rework is design-induced",           source: "ResearchGate / CMAA" },
+    { num: "$1.85T",  label: "at risk from bad project data globally", source: "Autodesk/FMI, 2021" }
+  ],
+
+  dataLinksCallout: "Data Links already connect Excel to tables \u2014 but only halfway. They update table content but don't touch callout tags. They require one Excel tab per table per sheet. They can't auto-filter per sheet. They provide no orphan detection or diagnostic logging.",
+
+  // compareRows: [capability, dataLinks, keynoteSuite]
+  compareRows: [
+    ["Excel \u2192 Table content",                  "\u2713",              "\u2713"],
+    ["Excel \u2192 Callout tag attributes",          "\u2717",              "\u2713"],
+    ["Auto-filter per sheet",                        "\u2717",              "\u2713"],
+    ["Single master workbook for all sheets",        "\u2717 (1 tab/table)", "\u2713"],
+    ["Orphan / ghost detection",                     "\u2717",              "\u2713"],
+    ["Batch all layouts in one run",                 "\u2717",              "\u2713"],
+    ["Renumbering propagation",                      "\u2717",              "\u2713"],
+    ["MText, Block, MLeader support",                "Table only",          "All three"]
+  ],
+
+  vsOld: [
+    "One Excel tab per table per sheet",
+    "Tables only \u2014 callouts untouched",
+    "No per-sheet auto-filtering",
+    "Renumber = touch every callout manually",
+    "No orphan/ghost detection",
+    "Collapses at scale"
+  ],
+  vsNew: [
+    "One master workbook drives everything",
+    "Syncs callout tags AND tables in one run",
+    "Auto-filters notes per sheet automatically",
+    "Renumber in Excel \u2014 sync handles the rest",
+    "Built-in orphan detection + diagnostic log",
+    "Linear scaling \u2014 same tool for 10 or 200 sheets"
+  ],
+
+  // colorClass must match a CSS class: teal | green | blue | orange
+  modes: [
+    { num: "Mode 1", title: "Sync Export",    dir: "CAD \u2192 Excel",      colorClass: "teal",   desc: "Reads all keynote entities from the drawing. Exports to Excel with one sheet per layout. Preserves existing workbook \u2014 onboarding ramp for existing drawings." },
+    { num: "Mode 2", title: "Sync Import",    dir: "Excel \u2192 CAD",      colorClass: "green",  desc: "Daily driver. Engineer updates Excel \u2014 run Sync Import \u2014 all callout descriptions update in-place by matching ID. Handles renumbering automatically." },
+    { num: "Mode 3", title: "Generate Table", dir: "Excel \u2192 CAD (new)", colorClass: "blue",   desc: "Creates keynote tables from Excel data. Places tables at configured location with correct styles, column widths, and callout blocks." },
+    { num: "Mode 4", title: "Export Table",   dir: "CAD Table \u2192 Excel", colorClass: "orange", desc: "Extracts existing table content to Excel for editing or review. QC receipt \u2014 confirm what is live in the drawing without modifying anything." }
+  ],
+
+  entities: [
+    { icon: "\uD83C\uDFF7\uFE0F", name: "MLeader + Block",      desc: "Block content with ID and KEY-DESC attributes. Most common standard callout." },
+    { icon: "\uD83D\uDCDD",       name: "MLeader + MText",       desc: "Text-only leaders. Formatting codes stripped automatically. Export supported." },
+    { icon: "\uD83D\uDCE6",       name: "Block Attributes Only", desc: "Standalone block references with ID + description attributes. No leader required." }
+  ],
+
+  standardsCallout: "<strong>Standards-agnostic by design.</strong> Block names, table styles, layer names, column widths \u2014 all input-driven. Configure once in Dynamo Player, save inputs, reuse across every project. Works with ANY firm standard, ANY jurisdiction, ANY discipline \u2014 without touching a line of code.",
+
+  // routerRows: [router name, input, what it controls]
+  routerRows: [
+    ["Selection Router",     "AutoScan or Manual",         "Whether engine scans all objects or uses your selection set"],
+    ["Layout Scope Router",  "Active or All Layouts",      "Which layout tabs are processed in one run"],
+    ["Table Header Setting", "5-mode dropdown",            "Title block presence, column header row, block on header row"],
+    ["Layer Setting",        "Current Layer or DEFPOINTS", "Which layer new objects are placed on"]
+  ],
+
+  setupCallout: "<strong>5-Minute Setup.</strong> Open Dynamo Player. Fill 4 fields: mode, Excel path, title text, block name. Everything else has production-safe defaults. No scripting. No Python knowledge required. Any CAD user can deploy it on their first run.",
+
+  objectives: [
+    "Identify where manual keynote management compounds across disciplines and revisions - and what it costs in production hours.",
+    "Define how standard differences across jurisdictions, firms, and reviewers create errors and rework in keynote workflows.",
+    "Configure and save input settings to match any block names, table styles, and layer standards - reusable across projects.",
+    "Deploy the engine on a live project and confirm every callout and table are synchronized across all layouts in one pass."
+  ],
+
+  session: {
+    type:  "AU 2026 \u2014 Technical Deep Dive",
+    title: "From 60 Hours to 60 Minutes: Bi-Directional Keynote Automation with Dynamo for Civil 3D",
+    meta:  [
+      "September 15\u201317, 2026",
+      "The Venetian, Las Vegas",
+      "60 Minutes \u2022 In-Person",
+      "Civil Engineering Track",
+      "Intermediate Level"
+    ]
+  },
+
+  footer: "Keynote Suite v7.0 \u2022 Dynamo for Civil 3D \u2022 AutoCAD API \u2022 AU 2026 Proposal"
+
+};
+</script>
+<!-- ═══════════════ TEMPLATE — DO NOT EDIT BELOW ═══════════════ -->
+
 <!-- HERO -->
-<div class="hero">
-  <div class="hero-badge">AU 2026 &bull; Technical Deep Dive &bull; Civil Infrastructure</div>
-  <h1>From <span>60 Hours</span> to 60 Minutes:<br>Bi-Directional Keynote Automation<br>with Dynamo for Civil 3D</h1>
-  <p class="hero-abstract">
+<div class="hero" id="hero"></div>
 
-    <!-- LINE 1 — edit sentence below -->
-    Every plan set has keynote callouts, notes, and tables. Every revision means hours of manual editing.
+<div class="wrap" id="main-wrap"></div>
 
-    <br><br>
-
-    <!-- LINE 2 — edit sentence below | font-size controls size, opacity controls fade -->
-    <span style="font-size:1rem;opacity:.82">From Renumbering Tags, Formatting Content, Updating Attributes, or Update Table Links. Sheet by Sheet, Discipline by Discipline.</span>
-
-    <br><br>
-
-    <!-- LINE 3 — "What IF" accent | font-size, color, letter-spacing all editable -->
-    <span style="font-size:1.6rem;font-weight:900;letter-spacing:.5px;color:#7dd3fc;text-shadow:0 0 24px rgba(125,211,252,0.6)">What IF !?</span>
-
-    <br><br>
-
-    <!-- LINE 4 — closing punch line -->
-    ONE Dynamo run could replace all of that at the click of a button.
-
-  </p>
-  <div class="hero-meta">
-    <span>Sep 15–17, 2026 &bull; Las Vegas</span>
-    <span>60 min &bull; In-Person</span>
-    <span>Civil Engineering Track</span>
-    <span>Dynamo + Civil 3D + AutoCAD API</span>
-  </div>
-  <div class="au-badge">&#x1f3db;&#xfe0f; Autodesk University 2026</div>
-</div>
-
-<div class="wrap">
-
-<!-- ABSTRACT -->
-<div class="section">
-  <h2>Session Abstract</h2>
-  <p class="lede">Every plan set has keynote callouts, notes, and tables. Every revision means hours of manual editing — renumbering tags, reformatting MText, updating attributes, sheet by sheet, discipline by discipline. What if ONE Dynamo run could replace all of that at the click of a button?</p>
-  <div class="callout c-blue">
-    This session demos a bi-directional engine that connects a single Excel workbook to every callout tag and table across every layout. Auto-filtered per sheet. Built-in orphan detection. No Data Links. No per-sheet tabs. From Standard Library to Civil 3D automation — an engine that works with <strong>ANY standard, ANY discipline, ANY scale</strong>. See it live. Configure it for your standards. Deploy it tomorrow.
-  </div>
-</div>
-
-<!-- THE PROBLEM -->
-<div class="section">
-  <h2>Part 1 — The Problem</h2>
-  <span class="pill pill-red">What the industry does today</span>
-  <p>Keynote management is a universal deliverable across every civil discipline — Water, Paving, Grading, Erosion Control, Storm, Signing &amp; Striping. Every revision cycle touches the same five phases:</p>
-
-  <div class="flow">
-    <div class="flow-step">1. Receive<br>&amp; Inventory</div>
-    <span class="flow-arrow">→</span>
-    <div class="flow-step">2. Keynote<br>Content Update</div>
-    <span class="flow-arrow">→</span>
-    <div class="flow-step pain">3. CAD Table<br>Updates<small>60–80% of time</small></div>
-    <span class="flow-arrow">→</span>
-    <div class="flow-step">4. Callout Tag<br>Updates</div>
-    <span class="flow-arrow">→</span>
-    <div class="flow-step">5. QC &amp;<br>Delivery</div>
-  </div>
-
-  <!-- PAIN POINTS -->
-  <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px;opacity:.7">&#9998; Click any card to edit</div>
-  <div class="pain-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px">
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
-      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">Manual Content Editing</div>
-      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Every content - sheet - discipline required manual edit from redline to CAD.</div>
-    </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
-      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">Callout Tags Disconnected</div>
-      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">MLeader and table row are separate objects - change one, the other doesn't update.</div>
-    </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
-      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">Renumbering Cascades</div>
-      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">One note renumbered - every callout across every sheet must be updated manually.</div>
-    </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
-      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">No Master List</div>
-      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Data Links: one Excel tab per table per sheet - 50 sheets means 50 separate links.</div>
-    </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
-      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">No Fixed Standard</div>
-      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Block Names, Table Styles, Note Wording - varies firm to firm, jurisdiction to jurisdiction.</div>
-    </div>
-  </div>
-
-  <!-- INDUSTRY NUMBERS -->
-  <h3>The Broader Industry Picture</h3>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:14px 0">
-    <div style="background:var(--red-light);border:1px solid #f5c6c2;border-radius:8px;padding:14px;text-align:center">
-      <div style="font-size:1.6rem;font-weight:900;color:var(--red);line-height:1">$177.5B</div>
-      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">lost to non-productive work annually</div>
-      <div style="font-size:.65rem;opacity:.55;margin-top:4px">PlanGrid/FMI, 2018</div>
-    </div>
-    <div style="background:var(--red-light);border:1px solid #f5c6c2;border-radius:8px;padding:14px;text-align:center">
-      <div style="font-size:1.6rem;font-weight:900;color:var(--red);line-height:1">14 hrs</div>
-      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">per week on non-productive tasks</div>
-      <div style="font-size:.65rem;opacity:.55;margin-top:4px">PlanGrid/FMI, 600 leaders, 2018</div>
-    </div>
-    <div style="background:var(--red-light);border:1px solid #f5c6c2;border-radius:8px;padding:14px;text-align:center">
-      <div style="font-size:1.6rem;font-weight:900;color:var(--red);line-height:1">70%</div>
-      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">of rework is design-induced</div>
-      <div style="font-size:.65rem;opacity:.55;margin-top:4px">ResearchGate / CMAA</div>
-    </div>
-    <div style="background:var(--red-light);border:1px solid #f5c6c2;border-radius:8px;padding:14px;text-align:center">
-      <div style="font-size:1.6rem;font-weight:900;color:var(--red);line-height:1">$1.85T</div>
-      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">at risk from bad project data globally</div>
-      <div style="font-size:.65rem;opacity:.55;margin-top:4px">Autodesk/FMI, 2021</div>
-    </div>
-  </div>
-
-  <h3>The Industry Baseline: Data Links</h3>
-  <div class="callout c-red">
-    <strong>Data Links already connect Excel to tables — but only halfway.</strong> They update table content but don't touch callout tags. They require one Excel tab per table per sheet. They can't auto-filter per sheet. They provide no orphan detection or diagnostic logging.
-  </div>
-
-  <div class="tbl-wrap">
-    <table>
-      <tr><th>Capability</th><th>Data Links (Native)</th><th>Keynote Suite</th></tr>
-      <tr><td>Excel → Table content</td><td>✓</td><td>✓</td></tr>
-      <tr><td>Excel → Callout tag attributes</td><td>✗</td><td>✓</td></tr>
-      <tr><td>Auto-filter per sheet</td><td>✗</td><td>✓</td></tr>
-      <tr><td>Single master workbook for all sheets</td><td>✗ (1 tab per table)</td><td>✓</td></tr>
-      <tr><td>Orphan / ghost detection</td><td>✗</td><td>✓</td></tr>
-      <tr><td>Batch all layouts in one run</td><td>✗</td><td>✓</td></tr>
-      <tr><td>Renumbering propagation</td><td>✗</td><td>✓</td></tr>
-      <tr><td>MText, Block, MLeader support</td><td>Table only</td><td>All three</td></tr>
-    </table>
-  </div>
-</div>
-
-<!-- THE SOLUTION -->
-<div class="section">
-  <h2>Part 2 — The Solution: Keynote Suite v7.0</h2>
-  <span class="pill pill-green">Production-deployed</span>
-
-  <div class="vs">
-    <div class="vs-panel old">
-      <h4 style="color:var(--red)">Manual + Data Links</h4>
-      <ul>
-        <li>One Excel tab per table per sheet</li>
-        <li>Tables only — callouts untouched</li>
-        <li>No per-sheet auto-filtering</li>
-        <li>Renumber = touch every callout manually</li>
-        <li>No orphan/ghost detection</li>
-        <li>Collapses at scale</li>
-      </ul>
-    </div>
-    <div class="vs-div">→</div>
-    <div class="vs-panel new">
-      <h4 style="color:var(--green)">Keynote Suite v7.0</h4>
-      <ul>
-        <li>One master workbook drives everything</li>
-        <li>Syncs callout tags AND tables in one run</li>
-        <li>Auto-filters notes per sheet automatically</li>
-        <li>Renumber in Excel — sync handles the rest</li>
-        <li>Built-in orphan detection + diagnostic log</li>
-        <li>Linear scaling — same tool for 10 or 200 sheets</li>
-      </ul>
-    </div>
-  </div>
-
-  <h3>4 Operating Modes</h3>
-  <div class="mode-grid">
-    <div class="mode-card export">
-      <div class="mode-num">Mode 1</div>
-      <div class="mode-title">Sync Export</div>
-      <div class="mode-dir" style="color:var(--teal)">CAD → Excel</div>
-      <div class="mode-desc">Reads all keynote entities from the drawing. Exports to Excel with one sheet per layout. Preserves existing workbook — onboarding ramp for existing drawings.</div>
-    </div>
-    <div class="mode-card import">
-      <div class="mode-num">Mode 2</div>
-      <div class="mode-title">Sync Import</div>
-      <div class="mode-dir" style="color:var(--green)">Excel → CAD</div>
-      <div class="mode-desc">Daily driver. Engineer updates Excel — run Sync Import — all callout descriptions update in-place by matching ID. Handles renumbering automatically.</div>
-    </div>
-    <div class="mode-card gen">
-      <div class="mode-num">Mode 3</div>
-      <div class="mode-title">Generate Table</div>
-      <div class="mode-dir" style="color:var(--blue)">Excel → CAD (new)</div>
-      <div class="mode-desc">Creates keynote tables from Excel data. Places tables at configured location with correct styles, column widths, and callout blocks.</div>
-    </div>
-    <div class="mode-card extract">
-      <div class="mode-num">Mode 4</div>
-      <div class="mode-title">Export Table</div>
-      <div class="mode-dir" style="color:var(--orange)">CAD Table → Excel</div>
-      <div class="mode-desc">Extracts existing table content to Excel for editing or review. QC receipt — confirm what is live in the drawing without modifying anything.</div>
-    </div>
-  </div>
-
-  <h3>Supported Entity Types</h3>
-  <div class="entity-grid">
-    <div class="entity-card">
-      <div class="entity-icon">🏷️</div>
-      <div class="entity-name">MLeader + Block</div>
-      <div class="entity-desc">Block content with ID and KEY-DESC attributes. Most common standard callout.</div>
-    </div>
-    <div class="entity-card">
-      <div class="entity-icon">📝</div>
-      <div class="entity-name">MLeader + MText</div>
-      <div class="entity-desc">Text-only leaders. Formatting codes stripped automatically. Export supported.</div>
-    </div>
-    <div class="entity-card">
-      <div class="entity-icon">📦</div>
-      <div class="entity-name">Block Attributes Only</div>
-      <div class="entity-desc">Standalone block references with ID + description attributes. No leader required.</div>
-    </div>
-  </div>
-
-  <div class="callout c-teal">
-    <strong>Standards-agnostic by design.</strong> Block names, table styles, layer names, column widths — all input-driven. Configure once in Dynamo Player, save inputs, reuse across every project. Works with ANY firm standard, ANY jurisdiction, ANY discipline — without touching a line of code.
-  </div>
-</div>
-
-<!-- ARCHITECTURE -->
-<div class="section">
-  <h2>Part 3 — Architecture: Router + Engine</h2>
-  <span class="pill pill-teal">How it works under the hood</span>
-  <p>The tool separates concerns through independent router nodes — each translates one dropdown setting into one engine input. No interlock, no cascading configuration complexity.</p>
-
-  <div class="router-flow">
-    <div class="r-step">Selection<br><small style="font-weight:400">Auto / Manual</small></div>
-    <span class="r-arrow">→</span>
-    <div class="r-step">Layout Scope<br><small style="font-weight:400">Active / All</small></div>
-    <span class="r-arrow">→</span>
-    <div class="r-step">Table Header<br><small style="font-weight:400">5 modes</small></div>
-    <span class="r-arrow">→</span>
-    <div class="r-step">Layer<br><small style="font-weight:400">Current / DEFPOINTS</small></div>
-    <span class="r-arrow">→</span>
-    <div class="r-step engine">Keynote Engine v7.0<br><small style="font-weight:400;opacity:.8">1,553 lines</small></div>
-  </div>
-
-  <div class="tbl-wrap">
-    <table>
-      <tr><th>Router</th><th>Input</th><th>What it controls</th></tr>
-      <tr><td>Selection Router</td><td>AutoScan or Manual</td><td>Whether engine scans all objects or uses your selection set</td></tr>
-      <tr><td>Layout Scope Router</td><td>Active or All Layouts</td><td>Which layout tabs are processed in one run</td></tr>
-      <tr><td>Table Header Setting</td><td>5-mode dropdown</td><td>Title block presence, column header row, block on header row</td></tr>
-      <tr><td>Layer Setting</td><td>Current Layer or DEFPOINTS</td><td>Which layer new objects are placed on</td></tr>
-    </table>
-  </div>
-
-  <div class="callout c-blue">
-    <strong>5-Minute Setup.</strong> Open Dynamo Player. Fill 4 fields: mode, Excel path, title text, block name. Everything else has production-safe defaults. No scripting. No Python knowledge required. Any CAD user can deploy it on their first run.
-  </div>
-</div>
-
-<!-- LEARNING OBJECTIVES -->
-<div class="section">
-  <h2>Part 4 — What You'll Leave With</h2>
-  <span class="pill pill-blue">4 Learning Objectives</span>
-  <div class="lo-grid">
-    <div class="lo-card">
-      <div class="lo-num">Objective 1</div>
-      <div class="lo-text">Identify where manual keynote management compounds across disciplines and revisions - and what it costs in production hours.</div>
-    </div>
-    <div class="lo-card">
-      <div class="lo-num">Objective 2</div>
-      <div class="lo-text">Define how standard differences across jurisdictions, firms, and reviewers create errors and rework in keynote workflows.</div>
-    </div>
-    <div class="lo-card">
-      <div class="lo-num">Objective 3</div>
-      <div class="lo-text">Configure and save input settings to match any block names, table styles, and layer standards - reusable across projects.</div>
-    </div>
-    <div class="lo-card">
-      <div class="lo-num">Objective 4</div>
-      <div class="lo-text">Deploy the engine on a live project and confirm every callout and table are synchronized across all layouts in one pass.</div>
-    </div>
-  </div>
-</div>
-
-<!-- SESSION BOX -->
-<div class="session-box">
-  <h2>AU 2026 &mdash; Technical Deep Dive</h2>
-  <p>From 60 Hours to 60 Minutes: Bi-Directional Keynote Automation with Dynamo for Civil 3D</p>
-  <div class="session-meta">
-    <span>September 15–17, 2026</span>
-    <span>The Venetian, Las Vegas</span>
-    <span>60 Minutes &bull; In-Person</span>
-    <span>Civil Engineering Track</span>
-    <span>Intermediate Level</span>
-  </div>
-</div>
-
-</div><!-- /wrap -->
-
-<footer>
-  Keynote Suite v7.0 &bull; Dynamo for Civil 3D &bull; AutoCAD API &bull; AU 2026 Proposal
-</footer>
+<footer id="footer"></footer>
 
 <script>
-// Inject "Copy edits" button above pain grid
-document.addEventListener('DOMContentLoaded', function() {
-  var grid = document.querySelector('.pain-grid');
-  var btn = document.createElement('button');
-  btn.id = 'copy-edits-btn';
-  btn.textContent = 'Copy edits as text';
-  grid.parentNode.insertBefore(btn, grid);
+document.addEventListener('DOMContentLoaded', function () {
 
-  btn.addEventListener('click', function() {
+  /* ── helpers ── */
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls)  e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function div(cls, html) { return el('div', cls, html); }
+  function span(cls, html) { return el('span', cls, html); }
+
+  /* ════════════════════════════════════
+     HERO
+  ════════════════════════════════════ */
+  function buildHero() {
+    var h = document.getElementById('hero');
+    var C = CONTENT.hero;
+
+    h.appendChild(div('hero-badge', C.badge));
+
+    var h1 = el('h1', '', C.titleHtml);
+    h.appendChild(h1);
+
+    var p = el('p', 'hero-abstract');
+    // Line 1
+    p.appendChild(document.createTextNode(C.abstractLines[0]));
+    p.appendChild(el('br'));
+    p.appendChild(el('br'));
+    // Line 2 — muted/smaller
+    var l2 = el('span', 'hero-abstract-line2', C.abstractLines[1]);
+    p.appendChild(l2);
+    p.appendChild(el('br'));
+    p.appendChild(el('br'));
+    // Line 3 — What IF accent
+    var l3 = el('span', 'hero-abstract-whatif', C.abstractLines[2]);
+    p.appendChild(l3);
+    p.appendChild(el('br'));
+    p.appendChild(el('br'));
+    // Line 4
+    p.appendChild(document.createTextNode(C.abstractLines[3]));
+    h.appendChild(p);
+
+    var meta = div('hero-meta');
+    C.meta.forEach(function(m) { meta.appendChild(span('', m)); });
+    h.appendChild(meta);
+
+    h.appendChild(div('au-badge', C.footerBadge));
+  }
+
+  /* ════════════════════════════════════
+     ABSTRACT SECTION
+  ════════════════════════════════════ */
+  function buildAbstract() {
+    var C = CONTENT.abstract;
+    var sec = div('section');
+    sec.appendChild(el('h2', '', 'Session Abstract'));
+    sec.appendChild(el('p', 'lede', C.lede));
+    sec.appendChild(div('callout c-blue', C.callout));
+    return sec;
+  }
+
+  /* ════════════════════════════════════
+     THE PROBLEM SECTION
+  ════════════════════════════════════ */
+  function buildProblem() {
+    var sec = div('section');
+    sec.appendChild(el('h2', '', 'Part 1 \u2014 The Problem'));
+    sec.appendChild(div('pill pill-red', 'What the industry does today'));
+    sec.appendChild(el('p', '', 'Keynote management is a universal deliverable across every civil discipline \u2014 Water, Paving, Grading, Erosion Control, Storm, Signing &amp; Striping. Every revision cycle touches the same five phases:'));
+
+    // Flow steps (static structure, consistent with original)
+    var flow = div('flow');
+    var steps = [
+      { label: '1. Receive<br>&amp; Inventory', pain: false, sub: '' },
+      { label: '2. Keynote<br>Content Update',  pain: false, sub: '' },
+      { label: '3. CAD Table<br>Updates',       pain: true,  sub: '60\u201380% of time' },
+      { label: '4. Callout Tag<br>Updates',     pain: false, sub: '' },
+      { label: '5. QC &amp;<br>Delivery',       pain: false, sub: '' }
+    ];
+    steps.forEach(function(s, i) {
+      if (i > 0) flow.appendChild(span('flow-arrow', '\u2192'));
+      var d = div(s.pain ? 'flow-step pain' : 'flow-step', s.label);
+      if (s.sub) d.appendChild(el('small', '', s.sub));
+      flow.appendChild(d);
+    });
+    sec.appendChild(flow);
+
+    // Copy button
+    var btn = el('button', '', 'Copy edits as text');
+    btn.id = 'copy-edits-btn';
+    sec.appendChild(btn);
+
+    // Edit hint
+    sec.appendChild(div('edit-hint', '\u270e Click any card to edit'));
+
+    // Pain cards
+    var grid = div('pain-grid');
+    CONTENT.painCards.forEach(function(card) {
+      var wrap = div('editable-card');
+      var d = div('pain-card');
+      var t = div('pain-card-title', card.title);
+      t.contentEditable = 'true';
+      t.setAttribute('data-card', 'title');
+      var b = div('pain-card-body', card.body);
+      b.contentEditable = 'true';
+      b.setAttribute('data-card', 'body');
+      d.appendChild(t);
+      d.appendChild(b);
+      wrap.appendChild(d);
+      grid.appendChild(wrap);
+    });
+    sec.appendChild(grid);
+
+    // Industry stats
+    sec.appendChild(el('h3', '', 'The Broader Industry Picture'));
+    var statsGrid = div('stats-grid');
+    CONTENT.stats.forEach(function(s) {
+      var card = div('stat-card');
+      card.appendChild(div('stat-num', s.num));
+      card.appendChild(div('stat-label', s.label));
+      card.appendChild(div('stat-src', s.source));
+      statsGrid.appendChild(card);
+    });
+    sec.appendChild(statsGrid);
+
+    // Data Links callout
+    sec.appendChild(el('h3', '', 'The Industry Baseline: Data Links'));
+    sec.appendChild(div('callout c-red', '<strong>Data Links already connect Excel to tables \u2014 but only halfway.</strong> ' + CONTENT.dataLinksCallout));
+
+    // Comparison table
+    var tbl = div('tbl-wrap');
+    var table = el('table');
+    var thead = el('tr');
+    ['Capability', 'Data Links (Native)', 'Keynote Suite'].forEach(function(h) {
+      thead.appendChild(el('th', '', h));
+    });
+    table.appendChild(thead);
+    CONTENT.compareRows.forEach(function(row) {
+      var tr = el('tr');
+      row.forEach(function(cell) { tr.appendChild(el('td', '', cell)); });
+      table.appendChild(tr);
+    });
+    tbl.appendChild(table);
+    sec.appendChild(tbl);
+
+    return sec;
+  }
+
+  /* ════════════════════════════════════
+     THE SOLUTION SECTION
+  ════════════════════════════════════ */
+  function buildSolution() {
+    var sec = div('section');
+    sec.appendChild(el('h2', '', 'Part 2 \u2014 The Solution: Keynote Suite v7.0'));
+    sec.appendChild(div('pill pill-green', 'Production-deployed'));
+
+    // VS grid
+    var vs = div('vs');
+    var oldPanel = div('vs-panel old');
+    oldPanel.appendChild(el('h4', '', 'Manual + Data Links'));
+    var oldUl = el('ul');
+    CONTENT.vsOld.forEach(function(item) { oldUl.appendChild(el('li', '', item)); });
+    oldPanel.appendChild(oldUl);
+
+    var vsDiv = div('vs-div', '\u2192');
+
+    var newPanel = div('vs-panel new');
+    newPanel.appendChild(el('h4', '', 'Keynote Suite v7.0'));
+    var newUl = el('ul');
+    CONTENT.vsNew.forEach(function(item) { newUl.appendChild(el('li', '', item)); });
+    newPanel.appendChild(newUl);
+
+    vs.appendChild(oldPanel);
+    vs.appendChild(vsDiv);
+    vs.appendChild(newPanel);
+    sec.appendChild(vs);
+
+    // 4 Modes
+    sec.appendChild(el('h3', '', '4 Operating Modes'));
+    var modeGrid = div('mode-grid');
+    CONTENT.modes.forEach(function(m) {
+      var card = div('mode-card ' + m.colorClass);
+      card.appendChild(div('mode-num', m.num));
+      card.appendChild(div('mode-title', m.title));
+      card.appendChild(div('mode-dir', m.dir));
+      card.appendChild(div('mode-desc', m.desc));
+      modeGrid.appendChild(card);
+    });
+    sec.appendChild(modeGrid);
+
+    // Entity types
+    sec.appendChild(el('h3', '', 'Supported Entity Types'));
+    var entityGrid = div('entity-grid');
+    CONTENT.entities.forEach(function(e) {
+      var card = div('entity-card');
+      card.appendChild(div('entity-icon', e.icon));
+      card.appendChild(div('entity-name', e.name));
+      card.appendChild(div('entity-desc', e.desc));
+      entityGrid.appendChild(card);
+    });
+    sec.appendChild(entityGrid);
+
+    sec.appendChild(div('callout c-teal', CONTENT.standardsCallout));
+
+    return sec;
+  }
+
+  /* ════════════════════════════════════
+     ARCHITECTURE SECTION
+  ════════════════════════════════════ */
+  function buildArchitecture() {
+    var sec = div('section');
+    sec.appendChild(el('h2', '', 'Part 3 \u2014 Architecture: Router + Engine'));
+    sec.appendChild(div('pill pill-teal', 'How it works under the hood'));
+    sec.appendChild(el('p', '', 'The tool separates concerns through independent router nodes \u2014 each translates one dropdown setting into one engine input. No interlock, no cascading configuration complexity.'));
+
+    // Router flow (static steps + engine node)
+    var rf = div('router-flow');
+    var rSteps = [
+      { label: 'Selection',     sub: 'Auto / Manual' },
+      { label: 'Layout Scope',  sub: 'Active / All' },
+      { label: 'Table Header',  sub: '5 modes' },
+      { label: 'Layer',         sub: 'Current / DEFPOINTS' }
+    ];
+    rSteps.forEach(function(s) {
+      var d = div('r-step');
+      d.innerHTML = s.label + '<small>' + s.sub + '</small>';
+      rf.appendChild(d);
+      rf.appendChild(span('r-arrow', '\u2192'));
+    });
+    var engine = div('r-step engine');
+    engine.innerHTML = 'Keynote Engine v7.0<small>1,553 lines</small>';
+    rf.appendChild(engine);
+    sec.appendChild(rf);
+
+    // Router table
+    var tbl = div('tbl-wrap');
+    var table = el('table');
+    var thead = el('tr');
+    ['Router', 'Input', 'What it controls'].forEach(function(h) {
+      thead.appendChild(el('th', '', h));
+    });
+    table.appendChild(thead);
+    CONTENT.routerRows.forEach(function(row) {
+      var tr = el('tr');
+      row.forEach(function(cell) { tr.appendChild(el('td', '', cell)); });
+      table.appendChild(tr);
+    });
+    tbl.appendChild(table);
+    sec.appendChild(tbl);
+
+    sec.appendChild(div('callout c-blue', CONTENT.setupCallout));
+
+    return sec;
+  }
+
+  /* ════════════════════════════════════
+     LEARNING OBJECTIVES SECTION
+  ════════════════════════════════════ */
+  function buildObjectives() {
+    var sec = div('section');
+    sec.appendChild(el('h2', '', 'Part 4 \u2014 What You\'ll Leave With'));
+    sec.appendChild(div('pill pill-blue', '4 Learning Objectives'));
+    var grid = div('lo-grid');
+    CONTENT.objectives.forEach(function(obj, i) {
+      var card = div('lo-card');
+      card.appendChild(div('lo-num', 'Objective ' + (i + 1)));
+      card.appendChild(div('lo-text', obj));
+      grid.appendChild(card);
+    });
+    sec.appendChild(grid);
+    return sec;
+  }
+
+  /* ════════════════════════════════════
+     SESSION BOX
+  ════════════════════════════════════ */
+  function buildSessionBox() {
+    var C = CONTENT.session;
+    var box = div('session-box');
+    box.appendChild(el('h2', '', C.type));
+    box.appendChild(el('p', '', C.title));
+    var meta = div('session-meta');
+    C.meta.forEach(function(m) { meta.appendChild(span('', m)); });
+    box.appendChild(meta);
+    return box;
+  }
+
+  /* ════════════════════════════════════
+     RENDER ALL
+  ════════════════════════════════════ */
+  buildHero();
+
+  var wrap = document.getElementById('main-wrap');
+  wrap.appendChild(buildAbstract());
+  wrap.appendChild(buildProblem());
+  wrap.appendChild(buildSolution());
+  wrap.appendChild(buildArchitecture());
+  wrap.appendChild(buildObjectives());
+  wrap.appendChild(buildSessionBox());
+
+  document.getElementById('footer').textContent = CONTENT.footer;
+
+  /* ════════════════════════════════════
+     COPY EDITS BUTTON
+  ════════════════════════════════════ */
+  document.getElementById('copy-edits-btn').addEventListener('click', function () {
+    var btn = this;
     var out = [];
-    document.querySelectorAll('.editable-card').forEach(function(card) {
+    document.querySelectorAll('.editable-card').forEach(function (card) {
       var title = card.querySelector('[data-card="title"]').innerText.trim();
       var body  = card.querySelector('[data-card="body"]').innerText.trim();
       out.push(title + '\n' + body);
     });
-    navigator.clipboard.writeText(out.join('\n\n')).then(function() {
+    navigator.clipboard.writeText(out.join('\n\n')).then(function () {
       btn.textContent = 'Copied!';
-      setTimeout(function() { btn.textContent = 'Copy edits as text'; }, 1800);
+      setTimeout(function () { btn.textContent = 'Copy edits as text'; }, 1800);
     });
   });
+
 });
 </script>
 </body>
