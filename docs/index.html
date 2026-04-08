@@ -160,30 +160,26 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px;pad
 
   <!-- PAIN POINTS -->
   <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px;opacity:.7">&#9998; Click any card to edit</div>
-  <div class="pain-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:0 0 20px">
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">Cell-by-Cell Editing</div>
-      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Every row, every sheet, every discipline - no batch operation in native Civil 3D.</div>
+  <div class="pain-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px">
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
+      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">Manual Content Editing</div>
+      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Every content - sheet - discipline required manual edit from redline to CAD.</div>
     </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">Callout Tags Disconnected</div>
-      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">MLeader and table row are separate objects - change one, the other doesn't update.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
+      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">Callout Tags Disconnected</div>
+      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">MLeader and table row are separate objects - change one, the other doesn't update.</div>
     </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">Renumbering Cascades</div>
-      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">One note renumbered - every callout across every sheet updated manually.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
+      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">Renumbering Cascades</div>
+      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">One note renumbered - every callout across every sheet must be updated manually.</div>
     </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">No Master List</div>
-      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Data Links: one Excel tab per table per sheet - 50 sheets means 50 separate links.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
+      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">No Master List</div>
+      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Data Links: one Excel tab per table per sheet - 50 sheets means 50 separate links.</div>
     </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">No Fixed Standard</div>
-      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Block names, table styles, note wording - varies firm to firm, jurisdiction to jurisdiction.</div>
-    </div>
-    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-left:5px solid var(--red)">
-      <div contenteditable="true" style="font-weight:800;font-size:.92rem;color:var(--red);margin-bottom:4px;outline:none" data-card="title">No Automated QC</div>
-      <div contenteditable="true" style="font-size:.78rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Orphans, ghosts, stale numbers - only caught after plot review or field RFIs.</div>
+    <div class="editable-card" style="border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:4px solid var(--red);text-align:center">
+      <div contenteditable="true" style="font-weight:800;font-size:.88rem;color:var(--red);margin-bottom:6px;outline:none" data-card="title">No Fixed Standard</div>
+      <div contenteditable="true" style="font-size:.76rem;color:var(--muted);line-height:1.5;outline:none" data-card="body">Block Names, Table Styles, Note Wording - varies firm to firm, jurisdiction to jurisdiction.</div>
     </div>
   </div>
 
@@ -354,19 +350,19 @@ footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:40px;pad
   <span class="pill pill-blue">4 Learning Objectives</span>
   <div class="lo-grid">
     <div class="lo-card">
-      <div class="lo-num">LO 1 — Identify</div>
-      <div class="lo-text">Identify where manual keynote management compounds across disciplines and revisions — and what it costs in production hours.</div>
+      <div class="lo-num">Objective 1</div>
+      <div class="lo-text">Identify where manual keynote management compounds across disciplines and revisions - and what it costs in production hours.</div>
     </div>
     <div class="lo-card">
-      <div class="lo-num">LO 2 — Define</div>
+      <div class="lo-num">Objective 2</div>
       <div class="lo-text">Define how standard differences across jurisdictions, firms, and reviewers create errors and rework in keynote workflows.</div>
     </div>
     <div class="lo-card">
-      <div class="lo-num">LO 3 — Configure</div>
-      <div class="lo-text">Configure and save input settings to match any block names, table styles, and layer standards — reusable across projects.</div>
+      <div class="lo-num">Objective 3</div>
+      <div class="lo-text">Configure and save input settings to match any block names, table styles, and layer standards - reusable across projects.</div>
     </div>
     <div class="lo-card">
-      <div class="lo-num">LO 4 — Deploy</div>
+      <div class="lo-num">Objective 4</div>
       <div class="lo-text">Deploy the engine on a live project and confirm every callout and table are synchronized across all layouts in one pass.</div>
     </div>
   </div>
