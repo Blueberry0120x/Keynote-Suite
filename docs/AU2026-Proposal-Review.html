@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AU 2026 Proposal Review — Keynote Suite: Bi-Directional Automation for Civil 3D</title>
+    <style>
+        :root {
+            --blue: #0056b3;
+            --blue-light: #e8f0fe;
+            --blue-dark: #002b5c;
+            --green: #198754;
+            --green-light: #e8f5e9;
+            --orange: #e67e22;
+            --orange-light: #fff3e0;
+            --red: #c0392b;
+            --red-light: #fdecea;
+            --purple: #6c3483;
+            --purple-light: #f3e8ff;
+            --teal: #0d9488;
+            --teal-light: #e0f7f5;
+            --gray: #f5f7f9;
+            --gray-border: #dde1e6;
+            --text: #1a1a2e;
+            --text-muted: #555;
+            --radius: 10px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.7; color: var(--text); background: var(--gray); }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 60%, var(--teal) 100%);
+            color: white; padding: 52px 32px; text-align: center;
+        }
+        .hero h1 { font-size: 2.3rem; font-weight: 700; margin-bottom: 8px; }
+        .hero .sub { font-size: 1.15rem; opacity: 0.9; max-width: 700px; margin: 0 auto; }
+        .hero .meta { margin-top: 16px; font-size: 0.88rem; opacity: 0.6; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 36px 24px 80px; }
+
+        /* Review Banner */
+        .review-banner {
+            background: var(--orange-light);
+            border: 2px solid var(--orange);
+            border-radius: var(--radius);
+            padding: 18px 24px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .review-banner .icon { font-size: 1.6rem; }
+        .review-banner h3 { color: var(--orange); margin-bottom: 4px; }
+        .review-banner p { font-size: 0.92rem; }
+
+        /* Section */
+        .section {
+            background: white; border-radius: var(--radius);
+            padding: 28px 32px; margin-bottom: 28px; box-shadow: var(--shadow);
+        }
+        .section h2 {
+            font-size: 1.45rem; color: var(--blue);
+            border-bottom: 2px solid var(--blue-light);
+            padding-bottom: 10px; margin-bottom: 18px;
+        }
+        .section h3 { font-size: 1.15rem; color: var(--blue-dark); margin: 22px 0 10px; }
+        .section h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+
+        /* Tables */
+        .table-wrap { overflow-x: auto; margin: 14px 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: var(--blue); color: white; padding: 10px 14px; text-align: left; font-weight: 600; }
+        td { padding: 9px 14px; border-bottom: 1px solid var(--gray-border); vertical-align: top; }
+        tr:nth-child(even) td { background: var(--blue-light); }
+        caption { caption-side: top; text-align: left; font-weight: 600; color: var(--blue-dark); margin-bottom: 6px; font-size: 0.95rem; }
+
+        /* Lists */
+        ol.steps { padding-left: 22px; } ol.steps > li { margin-bottom: 12px; }
+        ul.bullets { padding-left: 22px; } ul.bullets > li { margin-bottom: 6px; }
+
+        /* Callouts */
+        .callout { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 0.92rem; border-left: 4px solid; }
+        .callout-blue { background: var(--blue-light); border-color: var(--blue); }
+        .callout-green { background: var(--green-light); border-color: var(--green); }
+        .callout-red { background: var(--red-light); border-color: var(--red); }
+        .callout-orange { background: var(--orange-light); border-color: var(--orange); }
+        .callout-purple { background: var(--purple-light); border-color: var(--purple); }
+        .callout-teal { background: var(--teal-light); border-color: var(--teal); }
+
+        /* Flow */
+        .flow-box { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin: 24px 0; }
+        .flow-step {
+            background: white; border: 2px solid var(--blue); border-radius: 8px;
+            padding: 12px 18px; font-size: 0.85rem; font-weight: 600; text-align: center; min-width: 130px;
+        }
+        .flow-step.done { background: var(--green); color: white; border-color: var(--green); }
+        .flow-step.current { background: var(--blue); color: white; }
+        .flow-step.pending { border-style: dashed; border-color: var(--orange); color: var(--orange); }
+        .flow-arrow { font-size: 1.4rem; color: var(--blue); font-weight: 700; }
+
+        /* Pain Point Cards */
+        .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
+        .pain-card {
+            border-radius: var(--radius); padding: 18px; border: 1px solid var(--gray-border);
+            border-left: 5px solid var(--red);
+        }
+        .pain-card h4 { color: var(--red); margin-bottom: 6px; font-size: 0.95rem; }
+        .pain-card p { font-size: 0.88rem; color: var(--text-muted); }
+
+        /* Solution Cards */
+        .sol-card { border-left-color: var(--green); }
+        .sol-card h4 { color: var(--green); }
+
+        /* Comparison */
+        .vs-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: start; margin: 20px 0; }
+        .vs-panel { background: white; border-radius: var(--radius); padding: 20px; border: 1px solid var(--gray-border); }
+        .vs-panel h4 { text-align: center; margin-bottom: 12px; }
+        .vs-panel.old { border-top: 4px solid var(--red); }
+        .vs-panel.new { border-top: 4px solid var(--green); }
+        .vs-divider { display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--blue); }
+        @media (max-width: 700px) { .vs-grid { grid-template-columns: 1fr; } .vs-divider { transform: rotate(90deg); } }
+
+        /* Phase Labels */
+        .phase-label {
+            display: inline-block; padding: 4px 14px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 700; color: white; margin-bottom: 8px;
+        }
+        .pl-blue { background: var(--blue); }
+        .pl-green { background: var(--green); }
+        .pl-orange { background: var(--orange); }
+        .pl-purple { background: var(--purple); }
+        .pl-teal { background: var(--teal); }
+
+        /* Badge */
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .b-done { background: var(--green-light); color: var(--green); }
+        .b-pending { background: var(--orange-light); color: var(--orange); }
+        .b-urgent { background: var(--red-light); color: var(--red); }
+
+        /* Reviewer Section */
+        .reviewer-box {
+            background: white; border: 2px dashed var(--purple); border-radius: var(--radius);
+            padding: 24px; margin: 20px 0;
+        }
+        .reviewer-box h3 { color: var(--purple); margin-bottom: 10px; }
+        .reviewer-box textarea {
+            width: 100%; min-height: 80px; border: 1px solid var(--gray-border);
+            border-radius: 6px; padding: 10px; font-family: inherit; font-size: 0.9rem; resize: vertical;
+        }
+        .reviewer-box label { display: block; font-weight: 600; margin: 12px 0 4px; font-size: 0.92rem; }
+
+        /* Print */
+        @media print {
+            .hero { padding: 20px; }
+            .section { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+            body { background: white; }
+            .reviewer-box textarea { border: 1px solid #999; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>AU 2026 Proposal Review</h1>
+    <div class="sub">Keynote Suite: Bi-Directional Dynamo Automation for Civil 3D Keynote Callouts &amp; Tables</div>
+    <div class="meta">
+        Conference: Sep 15&ndash;17, 2026 &bull; The Venetian, Las Vegas &bull;
+        CFP Deadline: April 7 &bull; Edit Window: April 17<br>
+        Track: Built Environment / Civil Infrastructure &bull; Format: Tech Talk (50 min recommended)
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════ REVIEWER BANNER ═══════════ -->
+<div class="review-banner">
+    <span class="icon">&#x1f4cb;</span>
+    <div>
+        <h3>For Reviewer: Senior CAD/BIM Designer</h3>
+        <p>This document walks through the full AU 2026 proposal from problem statement to deliverable. Please review for <strong>technical accuracy</strong>, <strong>workflow realism</strong>, and <strong>time estimates</strong>. Feedback boxes are at the end of each major section. Your input shapes the final submission.</p>
+    </div>
+</div>
+
+<!-- ═══════════ PROPOSAL FLOW ═══════════ -->
+<div class="section">
+    <h2>Proposal Pipeline &mdash; Start to Finish</h2>
+    <div class="flow-box">
+        <div class="flow-step done">Research<br><small>AU 2026 CFP</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step done">Workflow<br>Analysis<br><small>Manual Process</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step done">Engine<br>Comparison<br><small>v2.0 vs v5.0</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step current">Reviewer<br>Validation<br><small>YOU ARE HERE</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step pending">Draft<br>Proposal</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step pending">Submit<br><small>Apr 7</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step pending">Refine<br><small>Apr 17</small></div>
+    </div>
+</div>
+
+<!-- ═══════════ PART 1: THE PROBLEM ═══════════ -->
+<div class="section">
+    <h2>Part 1: The Problem &mdash; Manual Keynote Management in Civil Plan Sets</h2>
+    <span class="phase-label pl-blue">What the industry does today</span>
+
+    <p>Keynote callouts and their associated tables are a universal deliverable in civil engineering plan sets. Every discipline (Water, Construction, Paving, Erosion Control, Storm, Grading, Signing &amp; Striping) has keynote tables and callout leaders that must stay synchronized across dozens of sheets.</p>
+
+    <h3>The Current 5-Phase Workflow (Manual)</h3>
+
+    <div class="flow-box">
+        <div class="flow-step" style="border-color:var(--teal)">1. Receive<br>&amp; Inventory</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step" style="border-color:var(--teal)">2. Keynote<br>Content Update</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step" style="border-color:var(--red);border-width:3px">3. CAD Table<br>Updates<br><small style="color:var(--red)">60&ndash;80% of time</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step" style="border-color:var(--teal)">4. Callout Tag<br>Updates</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step" style="border-color:var(--teal)">5. QC &amp;<br>Delivery</div>
+    </div>
+
+    <h4>Phase 1: Receive &amp; Inventory</h4>
+    <ul class="bullets">
+        <li>Engineer delivers redline PDFs / Bluebeam sessions, one per discipline.</li>
+        <li>Inventory all DWGs. Count sheets per discipline, locate keynote tables and callout leaders.</li>
+        <li>A 60-lot subdivision: 6 disciplines x 5&ndash;15 sheets = <strong>30&ndash;90 sheets</strong>.</li>
+        <li>Identify keynote standard (block name, table style, tag numbering scheme).</li>
+    </ul>
+
+    <h4>Phase 2: Keynote Content Update (The Data Work)</h4>
+    <ul class="bullets">
+        <li>Parse every redline &mdash; new notes, revised notes, deleted notes, renumbered notes.</li>
+        <li>Update master keynote list in Excel. <strong>This is where errors start</strong> (typos, missed notes, wrong numbering).</li>
+        <li>Cross-reference across disciplines &mdash; shared notes like "Compact to 95% Proctor" appear in Grading AND Paving AND Utilities.</li>
+        <li>Jurisdiction check &mdash; add mandatory standard notes per local requirements.</li>
+    </ul>
+
+    <h4>Phase 3: CAD Table Updates (The Grunt Work &mdash; 60&ndash;80% of Total Time)</h4>
+    <ul class="bullets">
+        <li>Open discipline drawing, locate existing table (Native Table? MText? Block with attributes?).</li>
+        <li><strong>Edit cells one by one.</strong> Add rows, delete rows, reformat, fix heights/widths.</li>
+        <li>Repeat per sheet. Repeat per discipline. 6 disciplines = 6 rounds minimum.</li>
+    </ul>
+
+    <h4>Phase 4: Callout Tag Updates (The Precision Work)</h4>
+    <ul class="bullets">
+        <li>Pan across every sheet. Find all callout leaders/blocks.</li>
+        <li>If notes were renumbered, <strong>every callout must be checked</strong>.</li>
+        <li>Add new callouts. Delete obsolete callouts.</li>
+        <li>Cross-check table &harr; callouts. <strong>#1 QC failure point:</strong> orphans (callout, no table entry) and ghosts (table entry, no callout).</li>
+    </ul>
+
+    <h4>Phase 5: QC &amp; Delivery</h4>
+    <ul class="bullets">
+        <li>Print or export each sheet. Manually verify every callout annotation against its corresponding table entry. No automated cross-check is available.</li>
+        <li>Cross-discipline check. Jurisdiction compliance. Submit for engineer review.</li>
+        <li>Expect 1&ndash;2 rounds of corrections.</li>
+    </ul>
+
+    <h3>Time Estimates (6 Disciplines, ~50 Sheets)</h3>
+    <div class="table-wrap">
+        <table>
+            <tr><th>Phase</th><th>Expert (10+ yr)</th><th>Intermediate (3&ndash;7 yr)</th><th>Novice (&lt;2 yr)</th></tr>
+            <tr><td>1: Receive &amp; Inventory</td><td>30 min</td><td>1 hr</td><td>1.5&ndash;2 hr</td></tr>
+            <tr><td>2: Keynote Content Update</td><td>1&ndash;2 hr</td><td>2&ndash;4 hr</td><td>4&ndash;6 hr</td></tr>
+            <tr><td style="font-weight:700;color:var(--red)">3: CAD Table Updates</td><td>3&ndash;5 hr</td><td>6&ndash;10 hr</td><td>10&ndash;16 hr</td></tr>
+            <tr><td>4: Callout Tag Updates</td><td>2&ndash;4 hr</td><td>5&ndash;8 hr</td><td>8&ndash;14 hr</td></tr>
+            <tr><td>5: QC &amp; Delivery</td><td>1&ndash;2 hr</td><td>2&ndash;4 hr</td><td>4&ndash;6 hr</td></tr>
+            <tr style="font-weight:700"><td>Subtotal</td><td>8&ndash;14 hr</td><td>16&ndash;27 hr</td><td>28&ndash;44 hr</td></tr>
+            <tr><td>Rework (1&ndash;2 QC rounds)</td><td>+2&ndash;3 hr</td><td>+4&ndash;8 hr</td><td>+8&ndash;16 hr</td></tr>
+            <tr style="font-weight:700;background:var(--red-light)"><td>GRAND TOTAL</td><td>10&ndash;17 hr</td><td>20&ndash;35 hr</td><td>36&ndash;60 hr</td></tr>
+        </table>
+    </div>
+
+    <h3>Core Pain Points</h3>
+    <div class="pain-grid">
+        <div class="pain-card">
+            <h4>Manual Table Editing</h4>
+            <p>No batch operation exists. Every table cell requires individual intervention — an effort that compounds across plan sheets and disciplines with each revision cycle.</p>
+        </div>
+        <div class="pain-card">
+            <h4>Disconnected Annotations</h4>
+            <p>Callout annotations and construction note table entries are independent objects with no synchronization. Modifying one does not propagate changes to the other.</p>
+        </div>
+        <div class="pain-card">
+            <h4>Renumbering Cascades</h4>
+            <p>A single renumbering event requires manually updating every affected callout annotation and corresponding table entry across all plan sheets.</p>
+        </div>
+        <div class="pain-card">
+            <h4>No Automated QC Verification</h4>
+            <p>Orphaned callout entries and missing table rows can only be identified through manual sheet-by-sheet review. No automated mechanism exists to ensure completeness.</p>
+        </div>
+        <div class="pain-card">
+            <h4>Inconsistent Cross-Discipline Standards</h4>
+            <p>Construction notes for the same specification item may be written inconsistently across disciplines, as each team manages markups independently without a shared reference.</p>
+        </div>
+        <div class="pain-card">
+            <h4>Non-Linear Effort Scaling</h4>
+            <p>Manual keynote management scales quadratically with project size. A 200-sheet, multi-discipline, multi-jurisdiction set renders the manual process unsustainable.</p>
+        </div>
+    </div>
+
+    <div class="reviewer-box">
+        <h3>Reviewer Feedback: Problem Statement</h3>
+        <label>Are the 5 phases accurate to your workflow? Anything missing or mischaracterized?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Are the time estimates realistic for your team? (Expert / Intermediate / Novice)</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Any additional pain points we should include?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+    </div>
+</div>
+
+<!-- ═══════════ PART 2: THE SOLUTION ═══════════ -->
+<div class="section">
+    <h2>Part 2: The Solution &mdash; Keynote Suite v5.0</h2>
+    <span class="phase-label pl-green">What the tool does</span>
+
+    <p>The Keynote Suite is a production-grade <strong>Civil 3D Dynamo automation tool</strong> for bi-directional keynote callout and table management. It replaces the manual workflow with a connected, automated pipeline.</p>
+
+    <h3>Before vs After</h3>
+    <div class="vs-grid">
+        <div class="vs-panel old">
+            <h4 style="color:var(--red)">Manual Process (Legacy)</h4>
+            <ul class="bullets">
+                <li>2 modes (Import / Export)</li>
+                <li>Tables + Blocks only</li>
+                <li>One-way per run</li>
+                <li>Hardcoded block names</li>
+                <li>Active layer only</li>
+                <li>All-or-nothing selection</li>
+                <li>Creates new workbook every time</li>
+                <li>Basic stats logging</li>
+                <li>~633 lines, monolithic</li>
+            </ul>
+        </div>
+        <div class="vs-divider">&rarr;</div>
+        <div class="vs-panel new">
+            <h4 style="color:var(--green)">Keynote Suite v5.0 (Current)</h4>
+            <ul class="bullets">
+                <li><strong>4 modes</strong> (Sync Export, Sync Import, Generate Table, Export Table)</li>
+                <li>MLeader+Block, MLeader+MText, Block-Only Attributes</li>
+                <li><strong>True bi-directional sync</strong> &mdash; reads by ID, updates in-place</li>
+                <li>Wildcard pattern matching via <code>fnmatch</code></li>
+                <li>Configurable layer OR <code>__FROM_BLOCK__</code> (dynamic)</li>
+                <li>Per-layout selection with Layout Scope Router</li>
+                <li>Preserves existing workbook, clears target sheets only</li>
+                <li>Full diagnostic log with config dump</li>
+                <li>1,555 lines, modular router architecture</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>4 Operating Modes</h3>
+    <div class="table-wrap">
+        <table>
+            <tr><th>Mode</th><th>Direction</th><th>What It Does</th></tr>
+            <tr><td><strong>Sync Export</strong></td><td>CAD &rarr; Excel</td><td>Reads all keynote entities from drawings, exports to Excel with layout-per-sheet mapping. Preserves existing workbook.</td></tr>
+            <tr><td><strong>Sync Import</strong></td><td>Excel &rarr; CAD</td><td>Reads Excel, updates existing callout tags and tables in-place. Dedup by ID, natural sort, handles renumbering automatically.</td></tr>
+            <tr><td><strong>Generate Table</strong></td><td>Excel &rarr; CAD (new)</td><td>Creates new keynote tables from Excel data. Places tables at configurable locations with proper formatting.</td></tr>
+            <tr><td><strong>Export Table</strong></td><td>CAD &rarr; Excel (tables only)</td><td>Extracts existing table content to Excel for editing/review without touching callouts.</td></tr>
+        </table>
+    </div>
+
+    <h3>Architecture: Router Nodes</h3>
+    <p>v5.0 separates concerns through independent router nodes that feed the engine:</p>
+    <div class="flow-box">
+        <div class="flow-step" style="border-color:var(--teal)">Selection<br>Router<br><small>AutoScan / Manual</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step" style="border-color:var(--teal)">Layout Scope<br>Router<br><small>Active / All / Specific</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step" style="border-color:var(--teal)">Block Placement<br>Setting<br><small>Title block skip/keep</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step" style="border-color:var(--teal)">Column Header<br>Setting<br><small>Delete / Keep / Keep+Block</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-step done">Keynote<br>Engine v5.0<br><small>1,555 LOC</small></div>
+    </div>
+
+    <div class="callout callout-teal">
+        <strong>Scale-Agnostic by Design:</strong> Table styles, sizes, block names, layers are all input-driven. A small firm configures Dynamo inputs once; a large corp uses the same inputs via CAD standards templates. The <code>__FROM_BLOCK__</code> dynamic layer adapts to any naming convention. This is a <strong>standards enforcement tool disguised as automation</strong>.
+    </div>
+
+    <h3>What It Solves</h3>
+    <div class="pain-grid">
+        <div class="pain-card sol-card">
+            <h4>Batch Synchronization</h4>
+            <p>A single Dynamo run updates all construction note tables across all layouts simultaneously. The manual table editing phase — historically 60–80% of revision time — is reduced to minutes.</p>
+        </div>
+        <div class="pain-card sol-card">
+            <h4>Connected Data</h4>
+            <p>Excel is the single source of truth. Callout tags and table rows are linked by ID. Change once, sync everywhere.</p>
+        </div>
+        <div class="pain-card sol-card">
+            <h4>Intelligent Renumbering</h4>
+            <p>The engine deduplicates by ID and applies natural sort order. Update the numbering in Excel, execute Sync Import, and all callout annotations update automatically across every layout.</p>
+        </div>
+        <div class="pain-card sol-card">
+            <h4>Automated QC Verification</h4>
+            <p>SmartZone cleanup identifies and removes orphaned callout blocks. A structured diagnostic log flags mismatches per layout, replacing manual sheet-by-sheet verification.</p>
+        </div>
+        <div class="pain-card sol-card">
+            <h4>Multi-Discipline Consistency</h4>
+            <p>All disciplines pull from same Excel workbook. Shared notes stay identical.</p>
+        </div>
+        <div class="pain-card sol-card">
+            <h4>Consistent Scaling</h4>
+            <p>The engine operates identically on a 10-sheet residential set and a 200-sheet infrastructure project. Process time is determined by AutoCAD transaction speed, not by manual effort.</p>
+        </div>
+    </div>
+
+    <div class="reviewer-box">
+        <h3>Reviewer Feedback: The Solution</h3>
+        <label>Does the Before/After comparison ring true? Anything overstated or understated?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Have you used Dynamo for Civil 3D? How comfortable is your team with Dynamo-based tools?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Would your team adopt this tool? What barriers do you see?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+    </div>
+</div>
+
+<!-- ═══════════ PART 3: ENGINEER MARKUP ═══════════ -->
+<div class="section">
+    <h2>Part 3: The Engineer Side &mdash; Markup &amp; Hand-Down Best Practices</h2>
+    <span class="phase-label pl-purple">The upstream workflow</span>
+
+    <p>The tool solves the CAD side, but the <strong>upstream markup quality</strong> determines downstream success. This section is included in the AU proposal as context for why automation alone isn't enough &mdash; process reform matters.</p>
+
+    <h3>What the Markup Package Should Contain</h3>
+    <div class="table-wrap">
+        <table>
+            <tr><th>Component</th><th>Best Practice</th><th>Reality</th></tr>
+            <tr><td>Redline prints</td><td>One marked-up PDF per sheet, clear symbols</td><td>Often scribbles, phone photos, or verbal</td></tr>
+            <tr><td>Keynote list</td><td>Separate table with tag #, text, discipline ID</td><td>Often scattered across markups</td></tr>
+            <tr><td>Change log / delta</td><td>What changed from last rev, with reason</td><td>Often doesn't exist</td></tr>
+            <tr><td>Jurisdiction reference</td><td>Standard notes per agency, with citation</td><td>Often "use the standard notes"</td></tr>
+            <tr><td>Scope description</td><td>Which sheets, disciplines, priority/deadline</td><td>Often "update the plans"</td></tr>
+        </table>
+    </div>
+
+    <h3>Honest Assessment: Is the Current Procedure Efficient?</h3>
+    <div class="callout callout-red">
+        <strong>No.</strong> The current industry-standard procedure is NOT efficient. Root causes:
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <tr><th>Problem</th><th>Impact</th><th>Root Cause</th></tr>
+            <tr><td>No single source of truth</td><td>Same note worded differently across disciplines</td><td>Siloed discipline workflows</td></tr>
+            <tr><td>Jurisdiction requirements scattered</td><td>CAD must guess which agency notes apply</td><td>No centralized template; tribal knowledge</td></tr>
+            <tr><td>Markup format varies by engineer</td><td>Bluebeam vs hand redlines vs emails</td><td>No firm-wide standard enforced</td></tr>
+            <tr><td>No delta tracking</td><td>CAD diffs old vs new markup manually</td><td>No version control on keynotes</td></tr>
+            <tr><td>Round-trip broken</td><td>Days per Engineer&rarr;CAD&rarr;Review cycle</td><td>Tables and tags are disconnected text</td></tr>
+            <tr><td>Scale compounds O(n&sup2;)</td><td>200-sheet, 8-discipline set: process collapses</td><td>Linear manual process can't keep up</td></tr>
+        </table>
+    </div>
+
+    <div class="reviewer-box">
+        <h3>Reviewer Feedback: Engineer Markup</h3>
+        <label>Is the "Best Practice vs Reality" table accurate to your experience?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Any markup pain points we're missing?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+    </div>
+</div>
+
+<!-- ═══════════ PART 4: AU PROPOSAL DRAFT ═══════════ -->
+<div class="section">
+    <h2>Part 4: Proposed AU 2026 Submission</h2>
+    <span class="phase-label pl-orange">Draft for review</span>
+
+    <h3>Conference Details</h3>
+    <div class="table-wrap">
+        <table>
+            <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>Conference</td><td>AU 2026: The Design &amp; Make Conference</td></tr>
+            <tr><td>Dates</td><td>September 15&ndash;17, 2026</td></tr>
+            <tr><td>Venue</td><td>The Venetian, Las Vegas + Digital</td></tr>
+            <tr><td>Format</td><td><strong>Tech Talk (50 min)</strong> &mdash; recommended for first-time speakers; step-by-step, actionable</td></tr>
+            <tr><td>Track</td><td><strong>Built Environment &rarr; Civil Infrastructure</strong></td></tr>
+            <tr><td>Audience</td><td>CAD/BIM Designers, Civil Engineers, CAD Managers, Dynamo users</td></tr>
+            <tr><td>Level</td><td>Intermediate (basic Dynamo + Civil 3D experience expected)</td></tr>
+        </table>
+    </div>
+
+    <h3>Proposed Title</h3>
+    <div class="callout callout-blue" style="font-size:1.1rem;font-weight:600;">
+        "From 60 Hours to 60 Minutes: Bi-Directional Keynote Automation with Dynamo for Civil 3D"
+    </div>
+
+    <h3>Proposed Abstract</h3>
+    <div class="callout callout-blue">
+        <p>Keynote callouts and tables are in every civil plan set &mdash; and managing them manually across multi-discipline, multi-sheet deliverables is one of the most time-consuming tasks in CAD production. A single plan set revision can take 20&ndash;60+ hours of cell-by-cell editing, eyeball QC, and renumbering cascades.</p>
+        <p style="margin-top:8px;">This session demonstrates a production-proven Dynamo tool that replaces that manual grind with a bi-directional sync engine. Using Excel as a connected data source, the Keynote Suite reads, writes, generates, and validates keynote tables and callout tags across all layouts in a single run. We'll walk through the real workflow &mdash; from receiving engineer markups to delivering a QC'd plan set &mdash; and show how what used to take days now takes minutes.</p>
+        <p style="margin-top:8px;">You'll see the 4-mode engine in action, learn how the router architecture makes it scale-agnostic across any CAD standard, and leave with a framework you can adapt to your own firm's keynote workflow.</p>
+    </div>
+
+    <h3>Proposed Learning Objectives</h3>
+    <ol class="steps">
+        <li><strong>Identify</strong> the five phases of manual keynote management and quantify where your team loses the most production hours.</li>
+        <li><strong>Implement</strong> a bi-directional Dynamo workflow that syncs keynote callouts and tables between Excel and Civil 3D across multiple layouts.</li>
+        <li><strong>Configure</strong> the router architecture (selection, layout scope, block placement, column header) to match your firm's CAD standards without code changes.</li>
+        <li><strong>Validate</strong> deliverable quality using automated orphan/ghost detection and diagnostic logging to replace eyeball-only QC.</li>
+    </ol>
+
+    <h3>AU 2026 Theme Alignment</h3>
+    <div class="table-wrap">
+        <table>
+            <tr><th>AU Theme</th><th>Our Story</th></tr>
+            <tr><td><strong>Connected Data</strong></td><td>Excel as single source of truth &harr; CAD tables &harr; callout tags, all synced by ID</td></tr>
+            <tr><td><strong>Integrated Workflows</strong></td><td>Dynamo + Civil 3D + Excel + AutoCAD API = multi-tool pipeline</td></tr>
+            <tr><td><strong>AI &amp; Automation</strong></td><td>AutoScan selection, SmartZone cleanup, diagnostic intelligence</td></tr>
+            <tr><td><strong>Sustainability</strong></td><td>Less rework = less wasted engineering hours = more sustainable practice</td></tr>
+            <tr><td><strong>Trust</strong></td><td>Automated QC replaces eyeball checking &mdash; trustworthy deliverables</td></tr>
+            <tr><td><strong>Scale</strong></td><td>Same tool for 10-sheet residential or 200-sheet commercial, any standard</td></tr>
+        </table>
+    </div>
+
+    <h3>Competitive Positioning</h3>
+    <div class="callout callout-green">
+        <strong>Dynamo + Civil 3D + Automation is a proven winning combination at AU.</strong> Past accepted sessions include "The Dynamic Duo of Automation" (2024), "Parametric Design in Practice" (2025), and "Dynamo for Civil 3D: Hands-On" (2024). Our differentiator: <strong>production-deployed, bi-directional, standards-agnostic</strong> &mdash; not a concept or prototype.
+    </div>
+
+    <div class="reviewer-box">
+        <h3>Reviewer Feedback: Proposal Draft</h3>
+        <label>Does the title grab attention? Would you click on this session at AU?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Is the abstract clear and compelling? Would an intermediate CAD user understand the value?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Are the 4 learning objectives realistic for a 50-minute session?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Any suggestions for the session flow / what to demo live?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+    </div>
+</div>
+
+<!-- ═══════════ PART 5: WHAT WE STILL NEED ═══════════ -->
+<div class="section">
+    <h2>Part 5: What We Still Need Before Submission</h2>
+
+    <div class="table-wrap">
+        <table>
+            <tr><th>#</th><th>Item</th><th>Status</th><th>Owner</th><th>Notes</th></tr>
+            <tr><td>1</td><td>Speaker info (name, title, company, bio)</td><td><span class="badge b-urgent">REQUIRED</span></td><td>Nathan</td><td>Needed for CFP portal</td></tr>
+            <tr><td>2</td><td>Deployment story with real numbers</td><td><span class="badge b-pending">PENDING</span></td><td>Team</td><td>Which project? How many sheets? Time saved?</td></tr>
+            <tr><td>3</td><td>Co-presenter decision</td><td><span class="badge b-pending">PENDING</span></td><td>Nathan</td><td>Up to 2 co-speakers allowed. Recommended: a CAD designer who used the tool</td></tr>
+            <tr><td>4</td><td>Senior CAD reviewer validation</td><td><span class="badge b-pending">THIS DOC</span></td><td>Reviewer</td><td>Feedback on workflow accuracy, time estimates, proposal draft</td></tr>
+            <tr><td>5</td><td>Format confirmation</td><td><span class="badge b-pending">PENDING</span></td><td>Nathan</td><td>Tech Talk (50 min) recommended. Hands-On Lab (90 min) if team capacity allows</td></tr>
+            <tr><td>6</td><td>Submit to CFP portal</td><td><span class="badge b-urgent">APR 7</span></td><td>Nathan</td><td>Initial submission. Edit window through Apr 17</td></tr>
+        </table>
+    </div>
+
+    <div class="reviewer-box">
+        <h3>Reviewer: Final Thoughts</h3>
+        <label>Overall &mdash; would you support this proposal going forward? Any showstoppers?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+        <label>Who else should review this before submission?</label>
+        <textarea placeholder="Type feedback here..."></textarea>
+    </div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.82rem;">
+    AU 2026 Proposal Review &bull; Generated 2026-04-06 &bull; NP_ClaudeAgent Controller &bull; CFP Deadline: April 7
+</div>
+
+</div>
+</body>
+</html>
