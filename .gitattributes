@@ -1,0 +1,28 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Force LF for code files
+*.py text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+
+# Force CRLF for Windows scripts
+*.ps1 text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary files
+*.dll binary
+*.exe binary
+*.png binary
+*.jpg binary
+*.xlsx binary
