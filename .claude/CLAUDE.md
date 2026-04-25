@@ -6,46 +6,14 @@
 
 > Dispatched by NP_ClaudeAgent Controller on 2026-04-24. Execute all items, commit with `[DISPATCH-DONE]` prefix, then notify Controller.
 
-### Pending Tasks
+### Completed (2026-04-25)
 
-1. **GROUND-001 — Commit dirty files**
-   Commit the following 8 tracked-but-uncommitted files in a single commit:
-   - `.claude/memory/` (all changed files within)
-   - `.gitattributes`
-   - `.github/` (all changed files within)
-   - `.gitignore`
-   - `.vscode/extensions.json`
-   - `CLAUDE.md`
-   - `UserPref.json`
-   - `controller-note/` (all changed files within)
-   Suggested message: `chore(baseline): commit dirty baseline files (GROUND-001)`
-
-2. **GROUND-006 — Create `tools/` folder**
-   Create `tools/.gitkeep` (empty file) and commit:
-   `chore(scaffold): add tools/ folder (GROUND-006)`
-
-3. **GLOBAL-009 — Document config/settings ownership in CLAUDE.md**
-   Add a `## Config & Settings Ownership` section to the root `CLAUDE.md`
-   listing which agent/role owns each config/settings file (e.g., `UserPref.json`,
-   `.vscode/extensions.json`, `.gitattributes`). One bullet per file with owner + purpose.
-
-4. **GLOBAL-011 — Add missing standard patterns to .gitignore**
-   Review `.gitignore` and ensure it includes standard Python patterns:
-   `__pycache__/`, `*.pyc`, `*.pyo`, `.env`, `*.log`, `.DS_Store`, `Thumbs.db`, `*.tmp`.
-   Add any that are missing.
-
-5. **GLOBAL-029 — Remove TODO placeholders from CLAUDE.md**
-   Remove all `<!-- TODO: ... -->` placeholder comments from the root `CLAUDE.md`.
-   Fill in real content where possible (project goal, read-only sources, writable paths,
-   handoff notes). If a value is genuinely unknown, replace the TODO with "TBD — pending
-   Designer input" and log it in the Handoff Notes.
-
-### Completion Acknowledgment
-
-After completing all tasks above:
-1. Commit with prefix `[DISPATCH-DONE]` in the commit message
-2. Append a summary entry to `controller-note/Keynote-Suite-upnote.md`
-3. Touch `controller-note/.ping`
+All 5 dispatch tasks done by Controller (@vscode-ext):
+- GROUND-001: baseline files committed
+- GROUND-006: tools/.gitkeep created
+- GLOBAL-009: Config & Settings Ownership table added to both CLAUDE.md files
+- GLOBAL-011: .gitignore updated with standard patterns
+- GLOBAL-029: all placeholder comments replaced with real content
 
 ## Project Goal
 
