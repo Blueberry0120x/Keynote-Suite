@@ -71,22 +71,35 @@ Before declaring any task complete:
 3. If either fails, fix the issue. Do NOT mark done until all pass.
 
 
+
+
+## Config & Settings Ownership
+
+| File | Owner | Purpose |
+|------|-------|---------|
+| `UserPref.json` | Agent | User preferences for agent behavior |
+| `.vscode/extensions.json` | Agent | Recommended VS Code extensions |
+| `.gitattributes` | Agent | Line-ending and diff settings |
+| `.gitignore` | Agent | Standard ignore patterns |
+| `controller-note/.ping` | Controller | Unread signal |
+| `controller-note/.last-read` | Agent | Read-acknowledgment timestamp |
+
 ## Safety Contract
 
-- **Read-only:** <!-- TODO: list read-only sources -->
-- **Writable:** <!-- TODO: list writable paths -->
+- **Read-only:** All external Revit/Civil 3D project files, reference data
+- **Writable:** This repo only (Keynote-Suite/) — keynote definitions, output scripts, reports
 
 
 ## Handoff Notes (last updated 2026-04-24)
 
 ### What was completed this session
-- <!-- TODO -->
+- Baseline scaffolded by Controller (CTRL-004): CLAUDE.md, .gitignore, controller-note/
 
 ### What still needs work
-- <!-- TODO -->
+- Core Dynamo scripts not yet built — pending Designer kickoff
 
 ### Known issues
-- <!-- TODO -->
+- None active
 
 
 ## Controller-Note Protocol (CTRL-005)
