@@ -165,41 +165,17 @@
   },
   "permissions": {
     "allow": [
-      "WebFetch(domain:community.esri.com)",
-      "WebFetch(domain:www.sciencedirect.com)",
-      "WebFetch(domain:www.uoguelph.ca)",
-      "WebFetch(domain:stackoverflow.com)",
-      "WebFetch(domain:scholar.google.com)",
-      "WebFetch(domain:www.researchgate.net)",
-      "WebFetch(domain:networkx.org)",
-      "WebFetch(domain:www.epa.gov)",
-      "WebFetch(domain:doi.org)",
-      "WebFetch(domain:www.usgs.gov)",
-      "WebFetch(domain:www.hec.usace.army.mil)",
-      "WebFetch(domain:onlinelibrary.wiley.com)",
-      "WebFetch(domain:swmm5.org)",
-      "WebFetch(domain:www.tandfonline.com)",
-      "WebFetch(domain:pcswmm.com)",
-      "WebFetch(domain:hydrology.usu.edu)",
-      "WebFetch(domain:www.civil.uwaterloo.ca)",
-      "WebFetch(domain:www.mdpi.com)",
-      "WebFetch(domain:www.transportation.gov)",
-      "WebFetch(domain:rosap.ntl.bts.gov)",
-      "WebFetch(domain:link.springer.com)",
-      "WebFetch(domain:www.nrcs.usda.gov)",
-      "WebFetch(domain:www.linkedin.com)",
-      "WebFetch(domain:www.vdot.virginia.gov)",
-      "WebFetch(domain:docs.whiteboxtoolset.com)",
-      "WebFetch(domain:www.wsdot.wa.gov)",
-      "WebFetch(domain:www.dot.state.mn.us)",
-      "WebFetch(domain:pro.arcgis.com)",
-      "WebFetch(domain:desktop.arcgis.com)",
-      "WebFetch(domain:giswqs.github.io)",
-      "WebFetch(domain:www.eng.uwo.ca)",
-      "WebFetch(domain:whiteboxgeo.com)"
-    ],
-    "additionalDirectories": [
-      "~/.claude/memory"
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "mcp__*",
+      "Agent(*)",
+      "Task(*)"
     ]
   }
 }
