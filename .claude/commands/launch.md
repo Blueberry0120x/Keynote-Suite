@@ -1,5 +1,10 @@
 # /launch — Trigger HTML Mirror Workflow (CTRL-006 Git-Projection)
 
+> **NOT the same as `/remote-invoke`.**
+> - `/launch` = CTRL-006: publishes HTML output to a public GitHub Pages mirror. It deploys files.
+> - `/remote-invoke` = CTRL-008: starts/checks a background Claude CLI session on this machine. It manages processes.
+> These are completely separate. Do not confuse them.
+
 Trigger and verify public HTML mirror deployment for a project.
 
 ## Steps
