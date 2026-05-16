@@ -10,41 +10,66 @@ the `tool_input.file_path` field, and if it sits inside this project's
 auto-memory folder, copies the file (and refreshes the MEMORY.md index)
 into the mirror.
 
+Auto-memory location discovery: enumerate `~/.claude/projects/` for a folder
+whose name ends with the repo name (raw or with underscores replaced by
+dashes). This is robust against Claude Code's slug algorithm changes
+across versions and case variations — far safer than trying to compute the
+slug ourselves (the early version did and got it wrong, producing
+`d-DevOps-NP-ClaudeAgent` when Claude Code uses `d--DevOps-NP-ClaudeAgent`).
+
 Best-effort: non-blocking, exit 0 always. Failures are silent so they
 never interrupt a session.
 
 History: created 2026-05-16 after the MPL-Harbor incident where 2 hours
 of Designer work was at risk because (a) MPL had zero memory, and (b)
 auto-memory only lived at `~/.claude/projects/.../memory/`, lost on
-machine swap. This hook closes that gap automatically.
+machine swap. Initial version had a broken slug computation found by
+the post-deploy dev-check; this version uses suffix-match discovery.
 """
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
 
 
-def _project_slug(repo_root: Path) -> str:
-    """Convert D:\\DevOps\\NP_ClaudeAgent -> d--DevOps-NP-ClaudeAgent."""
-    parts = repo_root.resolve().parts
-    if not parts:
-        return ""
-    drive = parts[0].rstrip(":\\").lower()
-    rest = [p.replace("_", "-") for p in parts[1:]]
-    return f"{drive}-" + "-".join(rest)
+def _find_auto_memory(repo_root: Path) -> Path | None:
+    """Locate this project's auto-memory folder by enumeration.
 
+    Returns the most recently modified `memory/` folder under any project
+    directory whose name ends with `<repo_name>` or `<repo_name with _ -> ->`.
+    Cross-platform: uses USERPROFILE on Windows, HOME on POSIX.
+    """
+    home_env = os.environ.get("USERPROFILE") or os.environ.get("HOME")
+    if not home_env:
+        return None
+    projects_dir = Path(home_env) / ".claude" / "projects"
+    if not projects_dir.exists():
+        return None
 
-def _auto_memory_root(repo_root: Path) -> Path:
-    """Return the Claude Code auto-memory folder for this project."""
-    import os
+    repo_name = repo_root.name
+    candidates = {repo_name, repo_name.replace("_", "-")}
 
-    home = Path(os.environ.get("USERPROFILE") or os.environ.get("HOME") or "")
-    if not home.exists():
-        return Path("")
-    slug = _project_slug(repo_root)
-    return home / ".claude" / "projects" / slug / "memory"
+    matches: list[tuple[Path, float]] = []
+    for child in projects_dir.iterdir():
+        if not child.is_dir():
+            continue
+        if not any(child.name.endswith(c) for c in candidates):
+            continue
+        mem = child / "memory"
+        if mem.is_dir():
+            try:
+                matches.append((mem, mem.stat().st_mtime))
+            except OSError:
+                continue
+
+    if not matches:
+        return None
+
+    matches.sort(key=lambda x: x[1], reverse=True)
+    return matches[0][0]
 
 
 def main() -> int:
@@ -69,8 +94,8 @@ def main() -> int:
     if not repo_root.exists():
         return 0
 
-    auto_mem = _auto_memory_root(repo_root)
-    if not auto_mem.exists():
+    auto_mem = _find_auto_memory(repo_root)
+    if auto_mem is None:
         return 0
 
     try:
@@ -79,17 +104,18 @@ def main() -> int:
     except (OSError, ValueError):
         return 0
 
-    mirror_root = repo_root / "controller-note" / "agent-memory"
-    mirror_root.mkdir(parents=True, exist_ok=True)
-    dst = mirror_root / rel
+    if not touched.is_file():
+        return 0
 
+    mirror_root = repo_root / "controller-note" / "agent-memory"
     try:
+        mirror_root.mkdir(parents=True, exist_ok=True)
+        dst = mirror_root / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(touched, dst)
     except OSError:
         return 0
 
-    # Always refresh the MEMORY.md index alongside individual files
     idx_src = auto_mem / "MEMORY.md"
     if idx_src.exists() and idx_src != touched:
         try:

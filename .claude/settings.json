@@ -130,6 +130,12 @@
             "type": "command",
             "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/auto_ping.py\"",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/memory_mirror.py\"",
+            "timeout": 5,
+            "statusMessage": "Mirroring auto-memory to controller-note/agent-memory/..."
           }
         ]
       }
