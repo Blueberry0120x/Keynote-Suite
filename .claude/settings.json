@@ -167,6 +167,18 @@
           }
         ]
       }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/pre_compact_capture.py\"",
+            "timeout": 15,
+            "statusMessage": "GLOBAL-030: capturing discoveries before compaction..."
+          }
+        ]
+      }
     ]
   },
   "permissions": {

@@ -180,3 +180,19 @@ Valid tags: `@claude-cli`, `@copilot`, `@vscode-ext`, `@remote-cli`, `@cloud`
 - **Copilot:** reads `.github/copilot-instructions.md` (points here)
 - **Controller:** CTRL-005 convention (`controller-note/`)
 
+
+## Pre-Compaction Protocol (GLOBAL-030)
+
+**Triggers** — when the Designer says any of these phrases, run ALL steps automatically without waiting to be asked:
+`ready for compaction`, `prep for compaction`, `getting ready for compaction`
+
+1. **Completion gate** — run all tests/verification; must pass
+2. **Update handoff notes** — move current session to "What was completed", update "What still needs work"
+3. **Write controller-note upnote** — append session summary to `controller-note/{repo_name}-upnote.md` + touch `.ping` and `.last-read`
+4. **Save memories** — write new feedback/project/reference `.md` files + update MEMORY.md index
+5. **Mirror memories** — copy all new/changed memory files to `controller-note/agent-memory/` (GLOBAL-030)
+6. **Commit + push** — single commit with `chore(compaction-prep): ...` message covering all docs
+7. **Confirm** — print "Ready for compaction. All docs committed and pushed."
+
+**PreCompact hook:** `pre_compact_capture.py` fires automatically when the context window is near full — scans the transcript for discovery signals ("add to baseline", "make that global", etc.) and writes verbatim snippets to `report/candidate_rules.md` so no insight is lost to compaction.
+
