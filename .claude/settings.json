@@ -94,6 +94,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/hardcode_path_guard.py\"",
+            "timeout": 10,
+            "statusMessage": "GLOBAL-004: checking for hardcoded paths..."
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -136,6 +146,16 @@
             "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/memory_mirror.py\"",
             "timeout": 5,
             "statusMessage": "Mirroring auto-memory to controller-note/agent-memory/..."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/tool_failure_capture.py\"",
+            "timeout": 10,
+            "statusMessage": "GLOBAL-SI: capturing tool failure for self-improvement..."
           }
         ]
       }

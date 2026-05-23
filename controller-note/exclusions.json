@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "last_updated": "2026-05-22",
+  "description": "Intentional divergences from the baseline template. CTRL-004 checks this before deploying any hook or setting, and deploys a snapshot to each repo's controller-note/exclusions.json. Any agent or audit hook modifying settings.json MUST check this file first.",
+  "entries": [
+    {
+      "repo": "Ether",
+      "type": "hook",
+      "identifier": "Notification",
+      "description": "PowerShell Notification hook",
+      "reason": "Causes excessive workflow noise on Ether; session_guard reports false positives",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-20",
+      "action": "do_not_add"
+    },
+    {
+      "repo": "Leviathan",
+      "type": "hook",
+      "identifier": "Notification",
+      "description": "PowerShell Notification hook",
+      "reason": "Intentionally removed 2026-05-20; Leviathan is a memory store, not a workflow executor",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-20",
+      "action": "do_not_add"
+    },
+    {
+      "repo": "NP_ClaudeAgent",
+      "type": "hook",
+      "identifier": "Notification",
+      "description": "PowerShell Notification hook",
+      "reason": "Intentionally removed 2026-05-20; replaced by post_action_notify.py which has dedup logic",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-20",
+      "action": "do_not_add"
+    }
+  ]
+}
