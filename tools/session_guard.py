@@ -688,10 +688,23 @@ def main(*, skip_ping: bool = False) -> int:
 
 
 def _levi_auto_ingest(repo_root: Path) -> None:
-    """Silently ingest memories + reports into Leviathan at session start."""
+    """Silently ingest memories + reports + mirrors into Leviathan at session start.
+
+    Three sources:
+      1. --ingest   walks .claude/memory/  (local auto-memory cache)
+      2. --reports  walks report/ + report/archive/
+      3. --mirrors  walks controller-note/agent-memory/ per repo (canonical
+                    source per GLOBAL-030; closes the 30-day-stale gap
+                    fixed in v2.4.4 -- see report/failure_log.md)
+
+    Only runs from NP_ClaudeAgent (the Controller side that has CTRL-011 +
+    Leviathan reachability). Silently no-ops elsewhere.
+    """
+    if repo_root.name != "NP_ClaudeAgent":
+        return
     try:
         import subprocess as _sp
-        # Memories: all repos' .claude/memory/
+        # Memories: this machine's .claude/memory/ auto-memory cache
         r1 = _sp.run(
             [sys.executable, "-m", "src.main", "levi-sync", "--ingest"],
             cwd=repo_root, capture_output=True, text=True, timeout=60,
@@ -701,8 +714,13 @@ def _levi_auto_ingest(repo_root: Path) -> None:
             [sys.executable, "-m", "src.main", "levi-sync", "--reports"],
             cwd=repo_root, capture_output=True, text=True, timeout=60,
         )
-        # Surface summary line if anything new was ingested
-        for r in (r1, r2):
+        # Mirrors: every repo's git-tracked agent-memory mirror (canonical)
+        r3 = _sp.run(
+            [sys.executable, "-m", "src.main", "levi-sync", "--mirrors"],
+            cwd=repo_root, capture_output=True, text=True, timeout=180,
+        )
+        # Surface summary lines for any source that ingested something new
+        for r in (r1, r2, r3):
             for line in r.stdout.splitlines():
                 if "new" in line and not line.strip().startswith("0 new"):
                     print(f"Levi: {line.strip()}")
