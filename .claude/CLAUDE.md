@@ -196,3 +196,16 @@ Valid tags: `@claude-cli`, `@copilot`, `@vscode-ext`, `@remote-cli`, `@cloud`
 
 **PreCompact hook:** `pre_compact_capture.py` fires automatically when the context window is near full — scans the transcript for discovery signals ("add to baseline", "make that global", etc.) and writes verbatim snippets to `report/candidate_rules.md` so no insight is lost to compaction.
 
+
+## Identity & Path Resolution (GLOBAL-031)
+
+Folder names embedded in absolute paths are NOT a signal of the current user. On host machines running persistent services, the dev root may live under a service-account profile while the interactive user is different. Always resolve identity at runtime:
+
+| Platform | Resolve via |
+|----------|------------|
+| PowerShell | `$env:USERPROFILE`, `$env:USERNAME` |
+| Python | `os.environ.get('USERPROFILE')` / `Path.home()` |
+| POSIX | `$HOME`, `$USER` |
+
+Never state identity facts from a path string alone  -  verify with a runtime call.
+
