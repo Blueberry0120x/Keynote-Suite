@@ -285,3 +285,29 @@ be revisited.
 `session_guard.py` runs `audit_settings()` at every session start and
 warns if `.claude/settings.json` references a tombstoned item.
 
+
+## Pre-Compaction Levi Push (CTRL-011 / Lane B)
+
+Extends the Pre-Compaction Protocol with a terminal step: push
+the git-tracked memory mirror into Leviathan so memories survive
+beyond compaction, machine swap, AND fresh-clone scenarios.
+
+**When:** runs AFTER the commit + push step. Levi mirrors
+git-committed truth, never WIP.
+
+**How:** `py tools/levi_push.py` walks `controller-note/agent-memory/` and appends one JSONL line per
+memory file to `controller-note/levi_inbound/YYYY-MM-DD.jsonl`.
+The Controller drains queues into Leviathan during repo-sync.
+
+**Why queue-and-drain instead of direct push:** decouples agent
+from Levi MCP availability (queues survive Levi downtime), and
+agents do not need to know Levi's local path or auth.
+
+**Trigger phrases that fire the full chain (existing + this step):**
+- `ready for compaction`
+- `prep for compaction`
+- `getting ready for compaction`
+
+See `reference/self_improve_v2_design.md` Lane B for the full
+design and rationale.
+

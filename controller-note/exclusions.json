@@ -1,7 +1,12 @@
 {
-  "version": 1,
-  "last_updated": "2026-05-22",
+  "version": 2,
+  "last_updated": "2026-05-24",
   "description": "Intentional divergences from the baseline template. CTRL-004 checks this before deploying any hook or setting, and deploys a snapshot to each repo's controller-note/exclusions.json. Any agent or audit hook modifying settings.json MUST check this file first.",
+  "schema_notes": {
+    "action.do_not_add": "Universal: never deploy this item, even if requested",
+    "action.allow_optin": "Universal exclusion EXCEPT for repos listed in optin file",
+    "optin_file": "Path relative to repo root listing repos that explicitly opt in"
+  },
   "entries": [
     {
       "repo": "Ether",
@@ -31,6 +36,27 @@
       "reason": "Intentionally removed 2026-05-20; replaced by post_action_notify.py which has dedup logic",
       "removed_by": "@claude-cli",
       "removed_date": "2026-05-20",
+      "action": "do_not_add"
+    },
+    {
+      "repo": "*",
+      "type": "hook",
+      "identifier": "threshold_commit.py",
+      "description": "PostToolUse auto-commit when lines>200 or files>2",
+      "reason": "Opinionated workflow; auto-commit + auto-push to origin main is destructive in repos with WIP, feature branches, or large generated artifacts. See reference/baseline_design_principles.md C6.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-24",
+      "action": "allow_optin",
+      "optin_file": "config/threshold_commit_optin.json"
+    },
+    {
+      "repo": "*",
+      "type": "workflow",
+      "identifier": "mirror-public.yml",
+      "description": "CTRL-006 GitHub Actions workflow that publishes built HTML to a public GitHub Pages mirror",
+      "reason": "Per-target config required (5 pieces: target repo, pages branch, source folder, path-stripping, PAT). Wrong target = data leak. Requires per-target Designer authorization per safety contract. Reference template at reference/ctrl006_mirror_workflow.md.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-24",
       "action": "do_not_add"
     }
   ]
