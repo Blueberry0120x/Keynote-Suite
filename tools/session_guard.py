@@ -544,12 +544,47 @@ def check_exclusion_violations(repo_root: Path) -> List[str]:
         identifier = item.get("identifier", "")
         if (item_repo == repo_name or item_repo == "*") and item_type == "hook":
             if identifier in present:
+                # Opt-in awareness: action=allow_optin entries permit specific
+                # repos to wire the hook legitimately. Skip if this repo is in
+                # the opt-in list. Inline (no src/ import) because this tool
+                # is deployed to every repo and must stay standalone.
+                if item.get("action") == "allow_optin":
+                    optin_rel = item.get("optin_file", "")
+                    if optin_rel and _repo_in_optin_file(repo_root, optin_rel, repo_name):
+                        continue
                 violations.append(
                     f"EXCLUSION VIOLATION: '{identifier}' in settings.json was "
                     f"intentionally removed on {item.get('removed_date', '?')}. "
                     f"Reason: {item.get('reason', '?')}"
                 )
     return violations
+
+
+def _repo_in_optin_file(repo_root: Path, optin_rel: str, repo_name: str) -> bool:
+    """Return True if repo_name is listed in optin_repos of the JSON at optin_rel.
+
+    optin_rel is relative to the repo root. Falls back to checking the
+    Controller's NP_ClaudeAgent workspace if not present locally (so non-Controller
+    repos can still resolve opt-ins from the canonical source).
+    """
+    import json as _json
+
+    candidates = [repo_root / optin_rel]
+    # If we're not in NP_ClaudeAgent, try the controller's copy via sibling lookup
+    if repo_root.name != "NP_ClaudeAgent":
+        sibling = repo_root.parent / "NP_ClaudeAgent" / optin_rel
+        candidates.append(sibling)
+
+    for path in candidates:
+        if not path.exists():
+            continue
+        try:
+            data = _json.loads(path.read_text(encoding="utf-8"))
+        except (_json.JSONDecodeError, OSError):
+            continue
+        if any(entry.get("repo") == repo_name for entry in data.get("optin_repos", [])):
+            return True
+    return False
 
 
 def kill_onedrive() -> None:
