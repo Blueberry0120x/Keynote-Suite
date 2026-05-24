@@ -231,3 +231,57 @@ The Claude Code auto-memory folder (under `~/.claude/projects/...`) is local to 
 
 **Anti-pattern:** Relying on `~/.claude/.../memory/` alone for anything that must survive a machine change. Always check the mirror for the authoritative copy.
 
+
+## Stale & Archive Protocol
+
+Stale items rot quietly. Every repo follows the same archival rules
+so audits stay consistent across the ecosystem.
+
+**Local artifacts** (build droppings, editor backups):
+- Patterns: `*.bak`, `*.old`, `*.orig`, `*.tmp`, `*~`, `*.copy`, `*.rej`, `__pycache__/`, `*.pyc`
+- Auto-cleaned at session start by `tools/session_guard.py`
+- Auto-cleaned before commit by `.claude/hooks/pre_commit_guard.py`
+- Never commit these. If a tool produces one, fix the tool to clean up.
+
+**Stale branches** (> 30 days without commit, non-main):
+- Flagged by CTRL-001 Harvest (INSP-003) in Controller audits
+- Archive before delete: rename to `archive/{branch-name}` and push the rename so the history survives, then delete the original locally
+- Pinned-on-purpose branches MUST have a PROTECT note in the upnote and a memory entry explaining why
+
+**Retired rules / hooks / workflows**:
+- Add a tombstone entry to `controller-note/exclusions.json` with reason + date + scope (the Controller's snapshot is mirrored here)
+- Removed items MUST NOT be silently re-added by audit agents
+- `session_guard.py` audits `.claude/settings.json` against exclusions at every session start and warns on violations
+
+**Old reports / output files**:
+- One-shot reports older than the current release land in `report/_archive/{YYYY-MM}/`
+- Personal scratch output (cut lists, sketches) lives in `output/` but is removed before any compaction/PR
+
+**Anti-pattern:** Deleting without a tombstone. The next agent will look at the gap, decide it's a bug, and re-create the problem.
+
+
+## Exclusions Registry (CTRL-004 Tombstone Protocol)
+
+`controller-note/exclusions.json` is a mirror of the Controller's
+intentional-divergence registry. Every entry documents something
+that was deliberately removed from this repo and MUST NOT be re-added.
+
+**Schema:**
+```
+{
+  "item_type": "hook | section | tool | workflow",
+  "name": "file or section name",
+  "scope": ["repo-A", "repo-B"]  // or "*" for all,
+  "reason": "why removed",
+  "removed_date": "YYYY-MM-DD"
+}
+```
+
+**Before adding anything that looks 'missing':** check this file
+first. If the missing item is listed, it was removed on purpose --
+do not re-add it. Discuss with the Designer if the removal needs to
+be revisited.
+
+`session_guard.py` runs `audit_settings()` at every session start and
+warns if `.claude/settings.json` references a tombstoned item.
+
