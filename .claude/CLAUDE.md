@@ -209,3 +209,25 @@ Folder names embedded in absolute paths are NOT a signal of the current user. On
 
 Never state identity facts from a path string alone  -  verify with a runtime call.
 
+
+## Memory Persistence Protocol (GLOBAL-030)
+
+The Claude Code auto-memory folder (under `~/.claude/projects/...`) is local to one OS profile on one machine. Without a mirror, every feedback / project / reference / user memory is lost on machine swap, fresh clone, or profile reset.
+
+**Mirror folder:** `controller-note/agent-memory/` (git-tracked, 1:1 with auto-memory). The mirror has its own `README.md` with restore steps.
+
+**Three-tier memory model:**
+
+| Tier | Location | Persistence |
+|------|----------|-------------|
+| Auto-memory | `~/.claude/projects/<slug>/memory/` | Local to one profile -- volatile |
+| Mirror | `controller-note/agent-memory/` | Git-tracked -- survives machine swap |
+| Canonical | `memories/` (curated) | Git-tracked -- deliberately maintained facts |
+
+**Enforcement:**
+- `memory_mirror.py` (PostToolUse) -- copies every auto-memory Write/Edit into the mirror.
+- `session_guard.py` (SessionStart) -- restores mirror-only files into auto-memory at session start; MEMORY.md divergence logged as WARNING, never auto-overwritten.
+- During `prep for compaction`: mirror all new/changed memories into `controller-note/agent-memory/` before commit.
+
+**Anti-pattern:** Relying on `~/.claude/.../memory/` alone for anything that must survive a machine change. Always check the mirror for the authoritative copy.
+
