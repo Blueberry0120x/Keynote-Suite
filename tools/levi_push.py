@@ -20,7 +20,7 @@ Exit codes:
   0 = success (or nothing-to-do)
   1 = unrecoverable error (mirror missing, queue dir uncreatable)
 
-See reference/self_improve_v2_design.md section 3 (Lane B).
+See reference/observation_infrastructure_v2.md section 3 (Lane B).
 """
 from __future__ import annotations
 

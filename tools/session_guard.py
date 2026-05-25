@@ -683,8 +683,59 @@ def main(*, skip_ping: bool = False) -> int:
     #     Runs silently; any failure is non-blocking (Levi is a learning aid, not a gate).
     _levi_auto_ingest(repo_root)
 
+    # (n) Retention prune -- once-per-day cadence, closes C9 self-violation
+    #     v2.5.2 shipped the retention tool but didn't wire its trigger.
+    _retention_prune_daily(repo_root)
+
     print("Session guard passed.")
     return 0
+
+
+def _retention_prune_daily(repo_root: Path) -> None:
+    """Run self_improve_retention prune once per day (max).
+
+    Closes the C9 self-violation flagged 2026-05-25: v2.5.2 shipped the
+    retention tool but never wired it to a trigger. This wires it.
+
+    Uses a stamp file (controller-note/.last-retention) to gate at
+    once-per-24h cadence -- cheap, doesn't slow session start.
+    Only runs from NP_ClaudeAgent (the Controller).
+    """
+    if repo_root.name != "NP_ClaudeAgent":
+        return
+    tool = repo_root / "tools" / "self_improve_retention.py"
+    if not tool.exists():
+        return
+    stamp = repo_root / "controller-note" / ".last-retention"
+    now = datetime.now(timezone.utc)
+    if stamp.exists():
+        try:
+            last = datetime.fromtimestamp(stamp.stat().st_mtime, tz=timezone.utc)
+            if (now - last).total_seconds() < 86_400:
+                return  # ran within last 24h
+        except OSError:
+            pass
+    try:
+        import subprocess as _sp
+        r = _sp.run(
+            [sys.executable, str(tool), "prune"],
+            cwd=repo_root, capture_output=True, text=True, timeout=30,
+        )
+        # Surface output only if something was actually pruned/rolled
+        if r.returncode == 0 and r.stdout:
+            for line in r.stdout.splitlines():
+                if "would" in line.lower():
+                    continue
+                if "0 " in line and "file" in line:
+                    continue
+                if line.strip():
+                    print(f"Retention: {line.strip()}")
+        try:
+            stamp.write_text(now.strftime("%Y-%m-%dT%H:%M:%SZ"), encoding="utf-8")
+        except OSError:
+            pass
+    except Exception:  # noqa: BLE001
+        pass  # Never block session start
 
 
 def _levi_auto_ingest(repo_root: Path) -> None:
