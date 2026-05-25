@@ -58,6 +58,26 @@
       "removed_by": "@claude-cli",
       "removed_date": "2026-05-24",
       "action": "do_not_add"
+    },
+    {
+      "repo": "*",
+      "type": "hook",
+      "identifier": "stale_cleanup.py",
+      "description": "Stale artifact cleaner (old baseline)",
+      "reason": "Retired 2026-03-31 -- session_guard + pre_commit_guard now auto-clean stale artifacts (no need for a dedicated hook). Found drifted in 8 sister repos via drift_check 2026-05-25.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-25",
+      "action": "do_not_add"
+    },
+    {
+      "repo": "*",
+      "type": "hook",
+      "identifier": "stop_gate.py",
+      "description": "Session-stop gate (old baseline)",
+      "reason": "Retired 2026-03-31 -- ping_check.py replaces this entirely (Stop event with full ping awareness). Keeping both causes duplicate stop-event execution.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-25",
+      "action": "do_not_add"
     }
   ]
 }
