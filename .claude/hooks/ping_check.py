@@ -97,10 +97,12 @@ def main() -> int:
     if check_pings(project_dir):
         unread.append(project_dir.name)
 
-    # Check all configured repos
+    # Check all configured repos (skip self to avoid double-counting)
     repos = _load_repo_paths(project_dir)
     for name, path in repos.items():
         if not path.exists():
+            continue
+        if path.resolve() == project_dir:
             continue
         if check_pings(path):
             unread.append(name)

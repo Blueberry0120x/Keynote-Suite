@@ -24,19 +24,29 @@ FORBIDDEN_NAMES = {"test", "temp", "wip", "stuff", "new-branch"}
 
 
 def extract_branch_name(command: str) -> str | None:
-    """Extract branch name from git checkout -b or git branch commands."""
-    # git checkout -b <name>
-    m = re.search(r"git\s+checkout\s+-b\s+(\S+)", command)
-    if m:
-        return m.group(1)
-    # git branch <name> (but not git branch -d or git branch -a)
-    m = re.search(r"git\s+branch\s+(?!-[adDrm])(\S+)", command)
-    if m:
-        return m.group(1)
-    # git switch -c <name>
-    m = re.search(r"git\s+switch\s+-c\s+(\S+)", command)
-    if m:
-        return m.group(1)
+    """Extract branch name from EXPLICIT create commands only.
+
+    Allowlist approach: only fire on commands that unambiguously create or
+    rename a branch. Bare `git branch <name>` is intentionally NOT matched
+    -- it's ambiguous with listing/redirect syntax and the analyzer's
+    GLOBAL-003 check will catch bad names downstream. This trades a small
+    coverage gap for zero false positives on agent shell ops.
+
+    Strip quoted strings first so `git commit -m "git checkout -b foo"`
+    in commit messages can't trigger the hook.
+    """
+    stripped = re.sub(r'"[^"]*"|\'[^\']*\'', '', command)
+    for pattern in (
+        r"git\s+checkout\s+-b\s+(\S+)",
+        r"git\s+switch\s+-c\s+(\S+)",
+        r"git\s+branch\s+(?:-[mMcC])\s+(?:\S+\s+)?(\S+)",  # rename/copy
+    ):
+        m = re.search(pattern, stripped)
+        if m:
+            name = m.group(1).strip("'\"")
+            # Skip if it looks like a flag or redirect leftover
+            if name and not name.startswith("-") and ">" not in name:
+                return name
     return None
 
 

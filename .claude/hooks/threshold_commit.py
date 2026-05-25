@@ -12,17 +12,29 @@ Never blocks (exit 0 always). Skips on merge conflicts or clean tree.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 
+_PORCELAIN_LINE = re.compile(r"^.{2}\s+(.+?)\s*$")
+
+
 def _run(cmd: list[str], cwd: Path) -> tuple[int, str]:
+    """Run cmd in cwd, return (returncode, combined-output).
+
+    Uses rstrip() (not strip()) so leading whitespace is preserved.
+    `git status --porcelain` output begins with significant whitespace
+    (e.g. ' M filename' for unstaged-modified files). A prior version
+    used .strip() and produced corrupt filenames on the first line --
+    see report/failure_log.md (2026-05-24) for the bug autopsy.
+    """
     try:
         r = subprocess.run(
             cmd, cwd=str(cwd), capture_output=True, text=True, timeout=20,
         )
-        return r.returncode, (r.stdout + r.stderr).strip()
+        return r.returncode, (r.stdout + r.stderr).rstrip()
     except (FileNotFoundError, subprocess.TimeoutExpired):
         return 1, ""
 
@@ -46,11 +58,25 @@ def _get_diff_stats(repo_root: Path) -> tuple[int, int]:
 
 
 def _get_pending_files(repo_root: Path) -> list[str]:
-    """Return list of dirty tracked file paths."""
+    """Return list of dirty file paths from `git status --porcelain`.
+
+    Uses a regex (status code = any 2 chars + whitespace + path) so the
+    parse is robust to leading whitespace in any line. The prior version
+    used fixed slicing line[3:] which combined with _run's earlier
+    .strip() produced filenames missing their first character (e.g.
+    'onfig/x.json' instead of 'config/x.json'). See failure_log autopsy.
+    """
     rc, out = _run(["git", "status", "--porcelain"], repo_root)
     if rc != 0 or not out.strip():
         return []
-    return [line[3:].strip() for line in out.splitlines() if line.strip()]
+    paths: list[str] = []
+    for line in out.splitlines():
+        if not line.strip():
+            continue
+        m = _PORCELAIN_LINE.match(line)
+        if m:
+            paths.append(m.group(1))
+    return paths
 
 
 def _has_merge_conflict(repo_root: Path) -> bool:

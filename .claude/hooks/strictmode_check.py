@@ -47,6 +47,15 @@ def main() -> int:
     except (subprocess.TimeoutExpired, FileNotFoundError):
         return 0
 
+    # Skip preserved / archived files -- they are historical artifacts,
+    # not authored-now code, and modifying them defeats the purpose of
+    # preservation. GLOBAL-010 applies to active code only.
+    skip_path_parts = ("reference/", "report/_archive/", "archive/", "Legacy/")
+    staged = [
+        f for f in staged
+        if not any(part in f.replace("\\", "/") for part in skip_path_parts)
+    ]
+
     if not staged:
         return 0
 
