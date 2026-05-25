@@ -687,8 +687,46 @@ def main(*, skip_ping: bool = False) -> int:
     #     v2.5.2 shipped the retention tool but didn't wire its trigger.
     _retention_prune_daily(repo_root)
 
+    # (o) Lane G skill usage aggregation -- weekly cadence
+    _skill_usage_refresh_weekly(repo_root)
+
     print("Session guard passed.")
     return 0
+
+
+def _skill_usage_refresh_weekly(repo_root: Path) -> None:
+    """Refresh Lane G skill/tool usage state once per week.
+
+    Reads ~/.claude/projects/*/<session>.jsonl, aggregates Skill + tool
+    usage, writes to controller-note/skill_usage/. Only runs from
+    NP_ClaudeAgent (the Controller); cadence-gated by .last-skill-refresh.
+    """
+    if repo_root.name != "NP_ClaudeAgent":
+        return
+    tool = repo_root / "tools" / "skill_usage_aggregator.py"
+    if not tool.exists():
+        return
+    stamp = repo_root / "controller-note" / ".last-skill-refresh"
+    now = datetime.now(timezone.utc)
+    if stamp.exists():
+        try:
+            last = datetime.fromtimestamp(stamp.stat().st_mtime, tz=timezone.utc)
+            if (now - last).total_seconds() < 7 * 86_400:
+                return
+        except OSError:
+            pass
+    try:
+        import subprocess as _sp
+        _sp.run(
+            [sys.executable, str(tool), "refresh"],
+            cwd=repo_root, capture_output=True, text=True, timeout=30,
+        )
+        try:
+            stamp.write_text(now.strftime("%Y-%m-%dT%H:%M:%SZ"), encoding="utf-8")
+        except OSError:
+            pass
+    except Exception:  # noqa: BLE001
+        pass
 
 
 def _retention_prune_daily(repo_root: Path) -> None:
