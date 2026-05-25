@@ -698,7 +698,7 @@ def main(*, skip_ping: bool = False) -> int:
 
 
 def _drift_check_weekly(repo_root: Path) -> None:
-    """Run drift_check status once per week from Controller only.
+    """Run drift_check status once per day from Controller only.
 
     Surfaces baseline file drift across sister repos. Read-only.
     Stamp file: controller-note/.last-drift-check
@@ -713,7 +713,7 @@ def _drift_check_weekly(repo_root: Path) -> None:
     if stamp.exists():
         try:
             last = datetime.fromtimestamp(stamp.stat().st_mtime, tz=timezone.utc)
-            if (now - last).total_seconds() < 7 * 86_400:
+            if (now - last).total_seconds() < 86_400:
                 return
         except OSError:
             pass
@@ -736,7 +736,7 @@ def _drift_check_weekly(repo_root: Path) -> None:
 
 
 def _skill_usage_refresh_weekly(repo_root: Path) -> None:
-    """Refresh Lane G skill/tool usage state once per week.
+    """Refresh Lane G skill/tool usage state once per day.
 
     Reads ~/.claude/projects/*/<session>.jsonl, aggregates Skill + tool
     usage, writes to controller-note/skill_usage/. Only runs from
@@ -752,7 +752,7 @@ def _skill_usage_refresh_weekly(repo_root: Path) -> None:
     if stamp.exists():
         try:
             last = datetime.fromtimestamp(stamp.stat().st_mtime, tz=timezone.utc)
-            if (now - last).total_seconds() < 7 * 86_400:
+            if (now - last).total_seconds() < 86_400:
                 return
         except OSError:
             pass
