@@ -690,8 +690,49 @@ def main(*, skip_ping: bool = False) -> int:
     # (o) Lane G skill usage aggregation -- weekly cadence
     _skill_usage_refresh_weekly(repo_root)
 
+    # (p) Drift check -- weekly cadence, surfaces baseline file drift
+    _drift_check_weekly(repo_root)
+
     print("Session guard passed.")
     return 0
+
+
+def _drift_check_weekly(repo_root: Path) -> None:
+    """Run drift_check status once per week from Controller only.
+
+    Surfaces baseline file drift across sister repos. Read-only.
+    Stamp file: controller-note/.last-drift-check
+    """
+    if repo_root.name != "NP_ClaudeAgent":
+        return
+    tool = repo_root / "tools" / "drift_check.py"
+    if not tool.exists():
+        return
+    stamp = repo_root / "controller-note" / ".last-drift-check"
+    now = datetime.now(timezone.utc)
+    if stamp.exists():
+        try:
+            last = datetime.fromtimestamp(stamp.stat().st_mtime, tz=timezone.utc)
+            if (now - last).total_seconds() < 7 * 86_400:
+                return
+        except OSError:
+            pass
+    try:
+        import subprocess as _sp
+        r = _sp.run(
+            [sys.executable, str(tool), "status", "--summary"],
+            cwd=repo_root, capture_output=True, text=True, timeout=30,
+        )
+        if r.returncode != 0 and r.stdout:
+            # Drift detected -- surface the summary line
+            print(f"Drift check: {r.stdout.strip()}")
+            print("  Heal with: py -m src.main repo-sync")
+        try:
+            stamp.write_text(now.strftime("%Y-%m-%dT%H:%M:%SZ"), encoding="utf-8")
+        except OSError:
+            pass
+    except Exception:  # noqa: BLE001
+        pass
 
 
 def _skill_usage_refresh_weekly(repo_root: Path) -> None:
