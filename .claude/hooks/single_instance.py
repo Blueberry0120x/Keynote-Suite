@@ -34,6 +34,42 @@ def _get_claude_pids() -> list[int]:
         return []
 
 
+def _extract_name(command: str) -> str:
+    """Extract the --name value from a command string."""
+    m = re.search(r"--name\s+(\S+)", command)
+    return m.group(1) if m else ""
+
+
+def _pid_file_for(name: str) -> str:
+    """Return the expected PID file path for a named session."""
+    import os  # noqa: PLC0415
+    safe = re.sub(r"[^\w.-]", "_", name)
+    # tools/ dir is sibling of .claude/
+    hooks_dir = os.path.dirname(os.path.abspath(__file__))
+    tools_dir = os.path.join(os.path.dirname(hooks_dir), "tools")
+    return os.path.join(tools_dir, f"remote_invoke_{safe}.pid")
+
+
+def _session_already_running(name: str) -> bool:
+    """Return True only if a PID file for this specific session name exists
+    and the process is alive."""
+    import os  # noqa: PLC0415
+    pid_path = _pid_file_for(name)
+    if not os.path.exists(pid_path):
+        return False
+    try:
+        with open(pid_path, encoding="utf-8") as fh:
+            pid_str = fh.read().strip()
+        if not pid_str.isdigit():
+            return False
+        pid = int(pid_str)
+        # Signal 0: check if process is alive (Windows uses tasklist fallback)
+        pids = _get_claude_pids()
+        return pid in pids
+    except (OSError, ValueError):
+        return False
+
+
 def main() -> int:
     try:
         hook_input = json.load(sys.stdin)
@@ -45,33 +81,22 @@ def main() -> int:
 
     command = hook_input.get("tool_input", {}).get("command", "")
 
-    # Only intercept remote-invoke --start or remote-control launches
-    is_remote_start = (
-        "remote-invoke" in command and "--start" in command
-    ) or (
-        "remote-control" in command and "claude" in command.lower()
-    )
+    # Only intercept remote-invoke --start launches (exact CTRL-008 pattern).
+    is_remote_start = "remote-invoke" in command and "--start" in command
 
-    # Also allow --reinvoke (which kills existing first)
+    # --reinvoke kills existing first — always allow
     if "--reinvoke" in command:
         return 0
 
     if not is_remote_start:
         return 0
 
-    # Check for existing claude.exe processes (excluding current session)
-    pids = _get_claude_pids()
-
-    # Filter: current process and its parent are not remote-control
-    # Simple heuristic: if more than 2 claude.exe processes exist,
-    # at least one is likely a remote-control session
-    # (1 = this CLI session, 2+ = potential remote sessions)
-    if len(pids) > 2:
+    # Block only if THIS named session is already running
+    name = _extract_name(command)
+    if name and _session_already_running(name):
         print(
-            f"BLOCKED (single-instance): {len(pids)} claude.exe process(es) "
-            f"already running (PIDs: {pids[:5]}). "
-            "Use --reinvoke to kill existing + start fresh, "
-            "or --stop first.",
+            f"BLOCKED (single-instance): session '{name}' is already running. "
+            "Use --reinvoke to kill existing + start fresh, or --stop first.",
             file=sys.stderr,
         )
         return 2

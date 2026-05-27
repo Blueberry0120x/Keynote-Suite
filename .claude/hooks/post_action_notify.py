@@ -73,28 +73,73 @@ def _is_major_cli(command: str) -> str | None:
     return None
 
 
-def _notify(task: str, detail: str = "") -> None:
-    """Fire notification via notify_github if available, else gh CLI."""
+def _git_remote_owner_repo(repo_root: Path) -> tuple[str, str] | None:
+    """Resolve (owner, repo) from git remote 'origin' URL. GLOBAL-004 compliant.
+
+    Replaces the prior hardcoded 'Blueberry0120x/NP_ClaudeAgent' which broke
+    every sister-repo notification by routing them to the controller's issue.
+    """
     try:
-        # Try importing the utility (available when running inside the repo)
-        sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-        from src.utils.utils import notify_github
-        notify_github("COMPLETED", task, detail=detail)
-    except (ImportError, Exception):
-        # Fallback: direct gh CLI call
-        try:
-            body = f"✅ **COMPLETED:** {task}"
-            if detail:
-                body += f" | {detail}"
-            subprocess.run(
-                ["gh", "issue", "comment", "14",
-                 "--repo", "Blueberry0120x/NP_ClaudeAgent",
-                 "--body", body],
-                capture_output=True,
-                timeout=15,
-            )
-        except (FileNotFoundError, subprocess.TimeoutExpired):
-            pass  # No gh CLI — skip silently
+        r = subprocess.run(
+            ["git", "-C", str(repo_root), "config", "--get", "remote.origin.url"],
+            capture_output=True, text=True, timeout=5,
+        )
+        url = (r.stdout or "").strip()
+        if not url:
+            return None
+        # https://github.com/<owner>/<repo>.git  OR  git@github.com:<owner>/<repo>.git
+        m = re.search(r"[:/]([^/:]+)/([^/]+?)(?:\.git)?$", url)
+        if not m:
+            return None
+        return m.group(1), m.group(2)
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+        return None
+
+
+def _notification_issue(repo_root: Path) -> str | None:
+    """Per-repo notification issue number. None = no notification configured."""
+    cfg = repo_root / ".claude" / "notification.json"
+    if not cfg.exists():
+        return None
+    try:
+        data = json.loads(cfg.read_text(encoding="utf-8"))
+        issue = data.get("issue")
+        return str(issue) if issue else None
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+def _notify(task: str, detail: str = "") -> None:
+    """Fire notification scoped to the CURRENT repo's GitHub origin.
+
+    GLOBAL-004 fix: owner/repo resolved from `git remote get-url origin`
+    instead of hardcoded `Blueberry0120x/NP_ClaudeAgent`. Issue number from
+    per-repo `.claude/notification.json` (no file -> skip silently). This
+    closes the cross-repo notification spam discovered in Lane 4 audit.
+    """
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    owner_repo = _git_remote_owner_repo(repo_root)
+    if owner_repo is None:
+        return  # not a git repo; nowhere to notify
+
+    issue = _notification_issue(repo_root)
+    if issue is None:
+        return  # per-repo notification not configured; skip
+
+    owner, repo = owner_repo
+    try:
+        body = f"COMPLETED: {task} [{repo}]"
+        if detail:
+            body += f"\n\n{detail}"
+        subprocess.run(
+            ["gh", "issue", "comment", issue,
+             "--repo", f"{owner}/{repo}",
+             "--body", body],
+            capture_output=True,
+            timeout=15,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        pass  # No gh CLI; skip silently
 
 
 def main() -> int:

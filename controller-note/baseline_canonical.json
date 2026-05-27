@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "description": "Controller's canonical baseline -- single source of truth for what every repo MUST carry. Used by settings_audit.py + drift_check.py to detect drift at session start.",
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash(*)",
+      "PowerShell(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "NotebookEdit(*)",
+      "mcp__*",
+      "Agent(*)",
+      "Task(*)",
+      "TodoWrite(*)"
+    ]
+  },
+  "hooks": [
+    {
+      "filename": "tool_failure_capture.py",
+      "event": "PostToolUse",
+      "command_suffix": ".claude/hooks/tool_failure_capture.py",
+      "timeout": 10,
+      "statusMessage": "GLOBAL-SI: capturing tool failure for self-improvement..."
+    },
+    {
+      "filename": "hardcode_path_guard.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/hardcode_path_guard.py",
+      "timeout": 10,
+      "statusMessage": "GLOBAL-004: checking for hardcoded paths..."
+    },
+    {
+      "filename": "memory_mirror.py",
+      "event": "PostToolUse",
+      "command_suffix": ".claude/hooks/memory_mirror.py",
+      "timeout": 5,
+      "statusMessage": "GLOBAL-030: mirroring auto-memory to git-tracked folder..."
+    },
+    {
+      "filename": "auto_ping.py",
+      "event": "PostToolUse",
+      "command_suffix": ".claude/hooks/auto_ping.py",
+      "timeout": 5,
+      "statusMessage": "CTRL-005: auto-touching .ping on upnote write..."
+    },
+    {
+      "filename": "ping_check.py",
+      "event": "Stop",
+      "command_suffix": ".claude/hooks/ping_check.py",
+      "timeout": 10,
+      "statusMessage": "CTRL-005: checking for unread pings before session exit..."
+    },
+    {
+      "filename": "pre_commit_guard.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/pre_commit_guard.py",
+      "timeout": 10,
+      "statusMessage": "GLOBAL-028: auto-cleaning stale artifacts before commit..."
+    },
+    {
+      "filename": "secret_scanner.py",
+      "event": "PostToolUse",
+      "command_suffix": ".claude/hooks/secret_scanner.py",
+      "timeout": 10,
+      "statusMessage": "GLOBAL-027: scanning tool output for leaked secrets..."
+    },
+    {
+      "filename": "xplat_guard.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/xplat_guard.py",
+      "timeout": 35,
+      "statusMessage": "XPLAT-001: checking cross-platform compliance before commit..."
+    },
+    {
+      "filename": "branch_naming.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/branch_naming.py",
+      "timeout": 5,
+      "statusMessage": "GLOBAL-003: validating branch name pattern..."
+    },
+    {
+      "filename": "strictmode_check.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/strictmode_check.py",
+      "timeout": 15,
+      "statusMessage": "GLOBAL-010: checking PowerShell StrictMode on staged files..."
+    },
+    {
+      "filename": "threshold_commit.py",
+      "event": "PostToolUse",
+      "command_suffix": ".claude/hooks/threshold_commit.py",
+      "timeout": 15,
+      "statusMessage": "OPT-IN: auto-commit + push at line/file thresholds..."
+    },
+    {
+      "filename": "settings_audit.py",
+      "event": "SessionStart",
+      "command_suffix": ".claude/hooks/settings_audit.py",
+      "timeout": 15,
+      "statusMessage": "SETTINGS-AUDIT: verifying settings.json vs canonical baseline..."
+    },
+    {
+      "filename": "auto_commit.py",
+      "event": "Stop",
+      "command_suffix": ".claude/hooks/auto_commit.py",
+      "timeout": 20,
+      "statusMessage": "auto-commit + push at session stop (MPL-Harbor incident fix)..."
+    },
+    {
+      "filename": "backup_config.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/backup_config.py",
+      "timeout": 5,
+      "statusMessage": "backup_config: snapshotting .claude/settings.json before edit..."
+    },
+    {
+      "filename": "block_find_exe.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/block_find_exe.py",
+      "timeout": 5,
+      "statusMessage": "block_find_exe: blocking find/glob for .env/.pem/.key (Defender T1552.004)..."
+    },
+    {
+      "filename": "com_lifecycle_check.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/com_lifecycle_check.py",
+      "timeout": 10,
+      "statusMessage": "com_lifecycle_check: scanning for unmanaged COM handles..."
+    },
+    {
+      "filename": "config_audit.py",
+      "event": "ConfigChange",
+      "command_suffix": ".claude/hooks/config_audit.py",
+      "timeout": 5,
+      "statusMessage": "config_audit: post-config-change verification..."
+    },
+    {
+      "filename": "cross_repo_ping.py",
+      "event": "PostToolUse",
+      "command_suffix": ".claude/hooks/cross_repo_ping.py",
+      "timeout": 5,
+      "statusMessage": "cross_repo_ping: notifying controller on commit..."
+    },
+    {
+      "filename": "git_identity_switch.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/git_identity_switch.py",
+      "timeout": 5,
+      "statusMessage": "GLOBAL-032: aligning git identity to current tenant..."
+    },
+    {
+      "filename": "hook_chain_guard.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/hook_chain_guard.py",
+      "timeout": 5,
+      "statusMessage": "hook_chain_guard: validating hook chain integrity..."
+    },
+    {
+      "filename": "post_action_notify.py",
+      "event": "PostToolUse",
+      "command_suffix": ".claude/hooks/post_action_notify.py",
+      "timeout": 20,
+      "statusMessage": "post_action_notify: GitHub notification check (per-repo aware)..."
+    },
+    {
+      "filename": "rules_memory_check.py",
+      "event": "SessionStart",
+      "command_suffix": ".claude/hooks/rules_memory_check.py",
+      "timeout": 10,
+      "statusMessage": "rules_memory_check: verifying rules + hooks + skills present..."
+    },
+    {
+      "filename": "single_instance.py",
+      "event": "PreToolUse",
+      "command_suffix": ".claude/hooks/single_instance.py",
+      "timeout": 10,
+      "statusMessage": "single_instance: enforcing per-host single-process invariants..."
+    },
+    {
+      "filename": "upnote_reminder.py",
+      "event": "PostToolUse",
+      "command_suffix": ".claude/hooks/upnote_reminder.py",
+      "timeout": 5,
+      "statusMessage": "upnote_reminder: prompting upnote write after commit..."
+    }
+  ],
+  "controller_only_hooks": [
+    "compact_reinject.py",
+    "prompt_pattern_capture.py"
+  ],
+  "tools": [
+    "session_guard.py",
+    "failure_analyze.py",
+    "levi_push.py"
+  ],
+  "skeleton_dirs": [
+    ".claude",
+    ".github",
+    ".vscode",
+    "controller-note",
+    "controller-note/agent-memory",
+    "controller-note/agent-memory/chat-history",
+    "reference",
+    "reference/best-practices",
+    "report",
+    "tools"
+  ],
+  "baseline_sections": [
+    "Project Goal",
+    "File Encoding",
+    "Branch Naming",
+    "Completion Protocol",
+    "Safety Contract",
+    "Handoff Notes",
+    "Controller-Note Protocol",
+    "Zero Hardcoding",
+    "Identity & Path Resolution",
+    "Execution Directives",
+    "Just-Act Permissions",
+    "Dev-Check Quality Gate",
+    "Recognized Trigger Phrases",
+    "HTML Projection",
+    "Shift Handoff Protocol",
+    "Stale & Archive Protocol",
+    "Exclusions Registry",
+    "Memory Persistence Protocol",
+    "Pre-Compaction Levi Push",
+    "Pre-Compaction Protocol"
+  ]
+}

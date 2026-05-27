@@ -13,14 +13,7 @@
       },
       {
         "matcher": "compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/compact_reinject.py\"",
-            "timeout": 10,
-            "statusMessage": "Re-injecting critical context after compaction..."
-          }
-        ]
+        "hooks": []
       },
       {
         "hooks": [
@@ -39,6 +32,16 @@
             "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/rules_memory_check.py\"",
             "timeout": 10,
             "statusMessage": "Verifying rules, hooks, and skills..."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/settings_audit.py\"",
+            "timeout": 15,
+            "statusMessage": "SETTINGS-AUDIT: verifying settings.json vs canonical baseline..."
           }
         ]
       }
@@ -102,6 +105,26 @@
             "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/hardcode_path_guard.py\"",
             "timeout": 10,
             "statusMessage": "GLOBAL-004: checking for hardcoded paths..."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/git_identity_switch.py\"",
+            "timeout": 5,
+            "statusMessage": "GLOBAL-032: aligning git identity to current tenant..."
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py \"$CLAUDE_PROJECT_DIR/.claude/hooks/single_instance.py\"",
+            "timeout": 10,
+            "statusMessage": "single_instance: enforcing per-host single-process invariants..."
           }
         ]
       }

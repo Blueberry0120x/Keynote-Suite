@@ -701,6 +701,8 @@ def _drift_check_weekly(repo_root: Path) -> None:
     """Run drift_check status once per day from Controller only.
 
     Surfaces baseline file drift across sister repos. Read-only.
+    Refreshes config/baseline_canonical.json from live source first so
+    drift_check is comparing sisters against the current canonical declarations.
     Stamp file: controller-note/.last-drift-check
     """
     if repo_root.name != "NP_ClaudeAgent":
@@ -716,6 +718,17 @@ def _drift_check_weekly(repo_root: Path) -> None:
             if (now - last).total_seconds() < 86_400:
                 return
         except OSError:
+            pass
+    # Refresh canonical snapshot first -- single source of truth
+    canon_tool = repo_root / "tools" / "baseline_canonical.py"
+    if canon_tool.exists():
+        try:
+            import subprocess as _sp
+            _sp.run(
+                [sys.executable, str(canon_tool)],
+                cwd=repo_root, capture_output=True, text=True, timeout=15,
+            )
+        except Exception:  # noqa: BLE001
             pass
     try:
         import subprocess as _sp
