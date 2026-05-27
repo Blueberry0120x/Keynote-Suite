@@ -78,6 +78,56 @@
       "removed_by": "@claude-cli",
       "removed_date": "2026-05-25",
       "action": "do_not_add"
+    },
+    {
+      "repo": "ParcelDashboard",
+      "type": "skill",
+      "identifier": "baseline.md",
+      "description": "Orphan skill from old v8 baseline",
+      "reason": "Stale v8 baseline never cleaned up. Surfaced by 2026-05-26 skills audit (Lane 3). No longer part of canonical skill set.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-26",
+      "action": "do_not_add"
+    },
+    {
+      "repo": "ParcelDashboard",
+      "type": "skill",
+      "identifier": "harvest.md",
+      "description": "Orphan skill from old v8 baseline",
+      "reason": "Stale v8 baseline never cleaned up. Surfaced by 2026-05-26 skills audit. Replaced by /repo-check at controller tier.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-26",
+      "action": "do_not_add"
+    },
+    {
+      "repo": "ParcelDashboard",
+      "type": "skill",
+      "identifier": "hygiene.md",
+      "description": "Orphan skill from old v8 baseline",
+      "reason": "Stale v8 baseline never cleaned up. Surfaced by 2026-05-26 skills audit. Replaced by /cleanup at controller tier.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-26",
+      "action": "do_not_add"
+    },
+    {
+      "repo": "ParcelDashboard",
+      "type": "skill",
+      "identifier": "remote-status.md",
+      "description": "Orphan skill from old v8 baseline",
+      "reason": "Stale v8 baseline never cleaned up. Surfaced by 2026-05-26 skills audit. Replaced by /remote-invoke at controller tier.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-26",
+      "action": "do_not_add"
+    },
+    {
+      "repo": "ParcelDashboard",
+      "type": "skill",
+      "identifier": "sync-hooks.md",
+      "description": "Orphan skill from old v8 baseline",
+      "reason": "Stale v8 baseline never cleaned up. Surfaced by 2026-05-26 skills audit. Replaced by /push-baseline at controller tier.",
+      "removed_by": "@claude-cli",
+      "removed_date": "2026-05-26",
+      "action": "do_not_add"
     }
   ]
 }

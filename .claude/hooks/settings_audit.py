@@ -124,6 +124,51 @@ def _check_hook_wiring(
     return warnings
 
 
+def _check_claude_md_paths(repo_root: Path) -> list[str]:
+    """Scan .claude/CLAUDE.md for hardcoded paths that don't resolve here.
+
+    Catches the LSP-Library / CatchmentDelin_XML failure class: an agent
+    follows a hardcoded run-command path that exists only on the work
+    profile, runs against the wrong cwd, claims success silently.
+    Warns; never blocks.
+    """
+    import re
+
+    warnings: list[str] = []
+    md = repo_root / ".claude" / "CLAUDE.md"
+    if not md.exists():
+        md = repo_root / "CLAUDE.md"
+    if not md.exists():
+        return warnings
+    try:
+        text = md.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return warnings
+
+    # Look for absolute Windows paths inside fenced code blocks or bash hints
+    # that are likely "run this command" examples. Pattern is conservative.
+    pattern = re.compile(
+        r"(?P<path>[A-Za-z]:[\\/][^\s`'\"<>|*?\n]+)"
+    )
+    seen: set[str] = set()
+    for m in pattern.finditer(text):
+        p = m.group("path").rstrip(".,;:)")
+        if p in seen:
+            continue
+        seen.add(p)
+        # Skip controller-note paths, this repo's own path, env-var resolved
+        # paths, and obviously-bogus single-letter matches.
+        if "$" in p or "%" in p:
+            continue
+        if str(repo_root).lower() in p.lower():
+            continue
+        if len(p) < 12:
+            continue
+        if not Path(p).exists():
+            warnings.append(f"CLAUDE.md references missing path: {p}")
+    return warnings[:5]  # cap to avoid noise
+
+
 def main() -> int:
     _ensure_utf8_stdio()
     hook_dir = Path(__file__).resolve().parent
@@ -152,6 +197,7 @@ def main() -> int:
     warnings: list[str] = []
     warnings.extend(_check_permissions(settings, canonical))
     warnings.extend(_check_hook_wiring(settings, canonical, repo_root))
+    warnings.extend(_check_claude_md_paths(repo_root))
 
     if warnings:
         print(

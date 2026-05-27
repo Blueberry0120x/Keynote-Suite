@@ -342,6 +342,52 @@ def _slug_from_path(p: Path) -> str:
     return s
 
 
+def _bootstrap_sibling_memories(controller_root: Path) -> None:
+    """Run check_memory_mirror against every active sibling repo.
+
+    Closes the second half of the GLOBAL-030 portable-machine gap: per-repo
+    `check_memory_mirror` only restores the repo whose session is running.
+    On a fresh machine where the user opened the Controller first, this
+    sweep seeds every sister repo's auto-memory cache in one pass so the
+    next time they open Leviathan / Ether / etc., memories are already there.
+    """
+    import json
+    import os
+
+    config_path = controller_root / "config" / "repos.json"
+    if not config_path.exists():
+        return
+    try:
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return
+
+    repos_root = Path(os.environ.get("REPOS_ROOT") or str(controller_root.parent))
+    siblings = [
+        repos_root / name for name in config.get("repos", [])
+        if name != "NP_ClaudeAgent"
+    ]
+
+    total_restored = 0
+    seeded_repos: list[str] = []
+    for sib in siblings:
+        if not (sib / "controller-note" / "agent-memory").exists():
+            continue
+        try:
+            n = check_memory_mirror(sib)
+        except Exception:  # noqa: BLE001
+            continue
+        if n:
+            total_restored += n
+            seeded_repos.append(f"{sib.name}:{n}")
+
+    if seeded_repos:
+        print(
+            "Cross-repo memory bootstrap: restored "
+            + ", ".join(seeded_repos)
+        )
+
+
 def check_memory_mirror(repo_root: Path) -> int:
     """Restore mirror -> auto-memory when mirror has files local doesn't.
 
@@ -396,9 +442,24 @@ def check_memory_mirror(repo_root: Path) -> int:
         existing.append((mtime, candidate))
 
     if not existing:
-        return 0
-    existing.sort(reverse=True)
-    auto_memory_dir = existing[0][1]
+        # FRESH-MACHINE BOOTSTRAP: no Claude Code auto-memory dir exists yet
+        # for this repo's slug. Create the canonical one and seed it from the
+        # mirror so memories are available BEFORE Claude Code first writes
+        # anything. Without this branch, restore was silently a no-op on
+        # every fresh portable machine -- GLOBAL-030 violation that hit
+        # 2026-05-27 when Designer asked "why is there no memory on portable?".
+        auto_memory_dir = home / ".claude" / "projects" / primary / "memory"
+        try:
+            auto_memory_dir.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            return 0
+        print(
+            f"Memory bootstrap: created {auto_memory_dir} "
+            "(fresh machine -- restoring from mirror)"
+        )
+    else:
+        existing.sort(reverse=True)
+        auto_memory_dir = existing[0][1]
 
     mirror_files = {p.name for p in mirror_dir.glob("*.md")}
     local_files = {p.name for p in auto_memory_dir.glob("*.md")}
@@ -465,6 +526,67 @@ def check_memory_mirror(repo_root: Path) -> int:
         )
 
     return restored
+
+
+def check_machine_handoffs(repo_root: Path) -> int:
+    """Surface cross-agent handoffs from OTHER machines/profiles.
+
+    Reads controller-note/machine_handoffs/ (git-tracked) and shows any
+    handoffs emitted by an agent other than THIS one since this agent's
+    last seen cursor. After surfacing, marks them seen so they don't
+    re-show on the next session.
+
+    Closes the gap that surfaced 2026-05-27: parallel Claude sessions on
+    different Windows profiles (NathanPham service account vs interactive
+    ngphu profile) or different physical machines had no programmatic
+    awareness of each other's commits/memory adds beyond manual scrollback.
+
+    Returns count of cross-agent handoffs surfaced. Non-blocking.
+    """
+    handoff_tool = repo_root / "tools" / "machine_handoff.py"
+    if not handoff_tool.exists():
+        return 0
+    try:
+        result = subprocess.run(
+            [sys.executable, str(handoff_tool), "unseen"],
+            cwd=repo_root, capture_output=True, text=True, timeout=10,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return 0
+    if result.returncode != 0:
+        return 0
+    rel_paths = [
+        line.strip() for line in result.stdout.splitlines()
+        if line.strip() and not line.startswith("(")
+    ]
+    if not rel_paths:
+        return 0
+    print("=" * 40)
+    print(f"CROSS-AGENT HANDOFFS: {len(rel_paths)} unseen")
+    for rel in rel_paths[:5]:
+        # Extract agent_id and timestamp from filename
+        stem = Path(rel).stem
+        try:
+            agent, stamp = stem.rsplit("--", 1)
+        except ValueError:
+            agent, stamp = stem, "?"
+        print(f"  {stamp}  from {agent}")
+        print(f"    -> {rel}")
+    if len(rel_paths) > 5:
+        print(f"  ... +{len(rel_paths) - 5} more")
+    print("READ each with: py tools/machine_handoff.py latest --other-only")
+    print("Mark seen with: py tools/machine_handoff.py mark-seen")
+    print("=" * 40)
+    # Auto-mark seen so re-runs of session_guard don't re-print the same banner.
+    # The handoff files stay on disk for any agent to re-read on demand.
+    try:
+        subprocess.run(
+            [sys.executable, str(handoff_tool), "mark-seen"],
+            cwd=repo_root, capture_output=True, timeout=10,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return len(rel_paths)
 
 
 def check_dispatch_trigger(repo_root: Path) -> bool:
@@ -641,6 +763,19 @@ def main(*, skip_ping: bool = False) -> int:
 
     # (j) Memory mirror restore -- closes GLOBAL-030 cross-machine gap
     check_memory_mirror(repo_root)
+
+    # (j.2) From the Controller, bootstrap memory for EVERY sibling repo.
+    #       On a fresh portable machine the user typically opens
+    #       NP_ClaudeAgent first; without this pass, sister repos stay
+    #       memory-less until their own session_guard ever runs. With it,
+    #       one Controller session seeds the whole ecosystem.
+    if repo_root.name == "NP_ClaudeAgent":
+        _bootstrap_sibling_memories(repo_root)
+
+    # (j2) Cross-agent handoffs -- surface what other Claude sessions did
+    #      since this agent last looked. Programmatic conjunction with
+    #      MCP-side / other-profile / other-machine agents.
+    check_machine_handoffs(repo_root)
 
     # (g) Stale artifacts -- warning with count
     stale_count = check_stale_artifacts(repo_root)
