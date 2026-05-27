@@ -213,7 +213,11 @@
       "WebSearch(*)",
       "mcp__*",
       "Agent(*)",
-      "Task(*)"
-    ]
+      "Task(*)",
+      "PowerShell(*)",
+      "NotebookEdit(*)",
+      "TodoWrite(*)"
+    ],
+    "defaultMode": "bypassPermissions"
   }
 }
