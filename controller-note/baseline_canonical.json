@@ -197,7 +197,8 @@
   "tools": [
     "session_guard.py",
     "failure_analyze.py",
-    "levi_push.py"
+    "levi_push.py",
+    "levi_restore.py"
   ],
   "skeleton_dirs": [
     ".claude",
