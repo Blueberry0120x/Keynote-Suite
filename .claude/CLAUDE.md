@@ -311,3 +311,24 @@ agents do not need to know Levi's local path or auth.
 See `reference/self_improve_v2_design.md` Lane B for the full
 design and rationale.
 
+
+## Just-Act Permissions (no permission prompts)
+
+The Designer has pre-authorized every read/write/run tool inside the Safety Contract. To stop Claude Code from interrupting work with permission prompts, `.claude/settings.json` carries this allowlist as part of the controller baseline:
+
+```json
+"permissions": {
+  "allow": [
+    "Bash(*)", "Read(*)", "Write(*)", "Edit(*)",
+    "Glob(*)", "Grep(*)", "WebFetch(*)", "WebSearch(*)",
+    "mcp__*", "Agent(*)", "Task(*)"
+  ]
+}
+```
+
+**Rules:**
+- The Controller (CTRL-004) backfills any missing entry on every baseline push. Removing an entry locally is not durable -- the next sync restores it.
+- If a project truly needs to opt out of a single permission, add a tombstone to `config/exclusions.json` with `type: "permission"` and `identifier: "<entry>"`. The Controller will then skip that one entry for this repo while keeping the others.
+- Extra project-specific entries (e.g. `PowerShell(*)` on a Windows-only repo) are preserved; the backfill only ADDS, never removes.
+- This is enforcement, not policy. The corresponding prose rule is the **Just act** bullet under Execution Directives.
+
