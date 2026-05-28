@@ -198,7 +198,10 @@
     "session_guard.py",
     "failure_analyze.py",
     "levi_push.py",
-    "levi_restore.py"
+    "levi_restore.py",
+    "nudge_agent.ps1",
+    "stop_nudge.ps1",
+    "linux_nudge_agent.py"
   ],
   "skeleton_dirs": [
     ".claude",
